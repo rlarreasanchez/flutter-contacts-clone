@@ -72,15 +72,26 @@ class _HomeScreenState extends State<HomeScreen> {
                 splashColor: Colors.transparent,
                 highlightColor: Colors.transparent,
               ),
-              child: BottomNavigationBar(
-                items: getBottomTabs(_items),
-                currentIndex: _selectedIndex,
-                selectedLabelStyle:
-                    const TextStyle(fontSize: 16, color: Colors.black),
-                selectedItemColor: Colors.black,
-                onTap: _onItemTapped,
-                unselectedFontSize: 16,
-                backgroundColor: const Color(0xffF2F5FB),
+              child: Container(
+                decoration: const BoxDecoration(
+                    border: Border(
+                        top: BorderSide(
+                            color: Color.fromARGB(255, 227, 230, 234),
+                            width: 1.0))),
+                child: BottomNavigationBar(
+                  items: getBottomTabs(_items),
+                  currentIndex: _selectedIndex,
+                  selectedLabelStyle: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500),
+                  unselectedLabelStyle:
+                      const TextStyle(fontWeight: FontWeight.w500),
+                  selectedItemColor: Colors.black,
+                  onTap: _onItemTapped,
+                  unselectedFontSize: 16,
+                  backgroundColor: const Color(0xffF2F5FB),
+                ),
               ),
             ),
           ),
