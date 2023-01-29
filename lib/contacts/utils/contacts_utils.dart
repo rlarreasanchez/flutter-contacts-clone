@@ -8,13 +8,22 @@ class ContactsUtils {
       ...contactos.map((contacto) => contacto.name[0]).toSet().toList()..sort()
     ];
 
-    return headers
-        .map((header) => ContactListItemModel(
-            letter: header,
-            contacts: contactos
-                .where((contacto) => header == contacto.name[0])
-                .toList()
-              ..sort((a, b) => a.name.compareTo(b.name))))
-        .toList();
+    List<ContactModel> favContacts =
+        contactos.where((c) => c.favorite ?? false).toList();
+
+    final ContactListItemModel favoritesItem =
+        ContactListItemModel(contacts: favContacts, favorite: true);
+
+    return [
+      favoritesItem,
+      ...headers
+          .map((header) => ContactListItemModel(
+              letter: header,
+              contacts: contactos
+                  .where((contacto) => header == contacto.name[0])
+                  .toList()
+                ..sort((a, b) => a.name.compareTo(b.name))))
+          .toList()
+    ];
   }
 }
