@@ -9,17 +9,17 @@ class ContactsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(children: const [
+      body: Column(children: [
         // Buscador
-        ContactsSearchBar(),
-        SizedBox(
+        const ContactsSearchBar(),
+        const SizedBox(
           height: 5,
         ),
-        SizedBox(
+        const SizedBox(
           height: 38,
           child: ContactsTagsList(),
         ),
-        SizedBox(
+        const SizedBox(
           height: 5,
         ),
         Expanded(child: ContactsStickyList())

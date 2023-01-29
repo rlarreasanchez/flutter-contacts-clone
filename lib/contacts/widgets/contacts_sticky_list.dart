@@ -1,17 +1,22 @@
+import 'dart:developer';
+
+import 'package:flutter/material.dart';
+import 'package:contactos_app/contacts/widgets/draggable_scrollbar.dart';
 import 'package:contactos_app/contacts/data/contacts_fake.dart';
 import 'package:contactos_app/contacts/models/contact_listItem_model.dart';
 import 'package:contactos_app/contacts/models/contact_model.dart';
 import 'package:contactos_app/contacts/utils/contacts_utils.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
 class ContactsStickyList extends StatelessWidget {
-  const ContactsStickyList({
+  final ScrollController _controller = ScrollController();
+
+  ContactsStickyList({
     Key? key,
   }) : super(key: key);
 
   List<ContactsStickySliver> generateContactsSlivers(
-      List<ContactModel> contactos) {
+      List<ContactModel> contactos, ScrollController controller) {
     final List<ContactListItemModel> contactosList =
         ContactsUtils.getContactsStickyList(contactos);
 
@@ -19,20 +24,25 @@ class ContactsStickyList extends StatelessWidget {
         .asMap()
         .entries
         .map((contact) => ContactsStickySliver(
-              index: contact.key,
-              item: contact.value,
-            ))
+            index: contact.key,
+            item: contact.value,
+            scrollController: controller))
         .toList();
   }
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        const _ContactsListHeader(
-            mail: 'rlarreasanchez@gmail.com', nContacts: 175),
-        ...generateContactsSlivers(contactsFake)
-      ],
+    return DraggableScrollbar(
+      heightScrollThumb: 70.0,
+      controller: _controller,
+      child: CustomScrollView(
+        controller: _controller,
+        slivers: [
+          const _ContactsListHeader(
+              mail: 'rlarreasanchez@gmail.com', nContacts: 175),
+          ...generateContactsSlivers(contactsFake, _controller)
+        ],
+      ),
     );
   }
 }
@@ -41,11 +51,13 @@ class ContactsStickySliver extends StatelessWidget {
   const ContactsStickySliver({
     Key? key,
     this.index,
+    required this.scrollController,
     required this.item,
   }) : super(key: key);
 
   final int? index;
   final ContactListItemModel item;
+  final ScrollController scrollController;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +72,7 @@ class ContactsStickySliver extends StatelessWidget {
     return SliverStickyHeader(
       overlapsContent: true,
       header: _SideHeader(
-          index: index, letter: item.letter ?? 'A', favorite: item.favorite),
+          index: index, letter: item.letter ?? '', favorite: item.favorite),
       sliver: SliverPadding(
           padding: const EdgeInsets.only(left: 60),
           sliver: SliverToBoxAdapter(
@@ -86,7 +98,9 @@ class _SideHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      padding: (favorite)
+          ? const EdgeInsets.symmetric(horizontal: 17.0, vertical: 10.0)
+          : const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       child: Align(
         alignment: Alignment.centerLeft,
         child: (favorite)
@@ -160,28 +174,31 @@ class _ContactItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 7),
-          child: CircleAvatar(
-            backgroundImage: NetworkImage(contact.imgUrl),
-            backgroundColor: Colors.transparent,
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0),
-            child: Text(
-              contact.name,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-              style: const TextStyle(fontSize: 18),
+    return Padding(
+      padding: const EdgeInsets.only(left: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 7),
+            child: CircleAvatar(
+              backgroundImage: NetworkImage(contact.imgUrl),
+              backgroundColor: Colors.transparent,
             ),
           ),
-        )
-      ],
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+              child: Text(
+                contact.name,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: const TextStyle(fontSize: 18),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

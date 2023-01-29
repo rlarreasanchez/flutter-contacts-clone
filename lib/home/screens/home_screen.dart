@@ -61,40 +61,39 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        top: true,
         child: Scaffold(
-          backgroundColor: Colors.white,
-          body: _screens[_selectedIndex],
-          bottomNavigationBar: SizedBox(
-            height: 90,
-            child: Theme(
-              data: Theme.of(context).copyWith(
-                splashColor: Colors.transparent,
-                highlightColor: Colors.transparent,
-              ),
-              child: Container(
-                decoration: const BoxDecoration(
-                    border: Border(
-                        top: BorderSide(
-                            color: Color.fromARGB(255, 227, 230, 234),
-                            width: 1.0))),
-                child: BottomNavigationBar(
-                  items: getBottomTabs(_items),
-                  currentIndex: _selectedIndex,
-                  selectedLabelStyle: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500),
-                  unselectedLabelStyle:
-                      const TextStyle(fontWeight: FontWeight.w500),
-                  selectedItemColor: Colors.black,
-                  onTap: _onItemTapped,
-                  unselectedFontSize: 16,
-                  backgroundColor: const Color(0xffF2F5FB),
-                ),
-              ),
+      backgroundColor: Colors.white,
+      body: _screens[_selectedIndex],
+      bottomNavigationBar: SizedBox(
+        height: 90,
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+          ),
+          child: Container(
+            decoration: const BoxDecoration(
+                border: Border(
+                    top: BorderSide(
+                        color: Color.fromARGB(255, 227, 230, 234),
+                        width: 1.0))),
+            child: BottomNavigationBar(
+              items: getBottomTabs(_items),
+              currentIndex: _selectedIndex,
+              selectedLabelStyle: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500),
+              unselectedLabelStyle:
+                  const TextStyle(fontWeight: FontWeight.w500),
+              selectedItemColor: Colors.black,
+              onTap: _onItemTapped,
+              unselectedFontSize: 16,
+              backgroundColor: const Color(0xffF2F5FB),
             ),
           ),
-        ));
+        ),
+      ),
+    ));
   }
 }
