@@ -1,3 +1,7 @@
+import 'package:contactos_app/contacts/data/contacts_fake.dart';
+import 'package:contactos_app/contacts/models/contact_listItem_model.dart';
+import 'package:contactos_app/contacts/models/contact_model.dart';
+import 'package:contactos_app/contacts/utils/contacts_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
@@ -6,44 +10,62 @@ class ContactsStickyList extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+  List<ContactsStickySliver> generateContactsSlivers(
+      List<ContactModel> contactos) {
+    final List<ContactListItemModel> contactosList =
+        ContactsUtils.getContactsStickyList(contactos);
+
+    return contactosList
+        .asMap()
+        .entries
+        .map((contact) => ContactsStickySliver(
+              index: contact.key,
+              item: contact.value,
+            ))
+        .toList();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const CustomScrollView(
+    return CustomScrollView(
       slivers: [
-        _ContactsListHeader(mail: 'rlarreasanchez@gmail.com', nContacts: 175),
-        _ContactsStickySliver(index: 0),
-        _ContactsStickySliver(index: 1),
-        _ContactsStickySliver(index: 2),
-        _ContactsStickySliver(index: 3),
+        const _ContactsListHeader(
+            mail: 'rlarreasanchez@gmail.com', nContacts: 175),
+        ...generateContactsSlivers(contactsFake)
       ],
     );
   }
 }
 
-class _ContactsStickySliver extends StatelessWidget {
-  const _ContactsStickySliver({
+class ContactsStickySliver extends StatelessWidget {
+  const ContactsStickySliver({
     Key? key,
     this.index,
+    required this.item,
   }) : super(key: key);
 
   final int? index;
+  final ContactListItemModel item;
 
   @override
   Widget build(BuildContext context) {
+    List<_ContactItem> generateContactList(List<ContactModel> contactos) {
+      return contactos
+          .map((contacto) => _ContactItem(
+                contact: contacto,
+              ))
+          .toList();
+    }
+
     return SliverStickyHeader(
       overlapsContent: true,
-      header: _SideHeader(index: index),
+      header: _SideHeader(
+          index: index, letter: item.letter ?? 'A', favorite: item.favorite),
       sliver: SliverPadding(
           padding: const EdgeInsets.only(left: 60),
           sliver: SliverToBoxAdapter(
               child: Column(
-            children: const [
-              _ContactItem(),
-              _ContactItem(),
-              _ContactItem(),
-              _ContactItem(),
-              _ContactItem()
-            ],
+            children: [...generateContactList(item.contacts)],
           ))),
     );
   }
@@ -53,25 +75,31 @@ class _SideHeader extends StatelessWidget {
   const _SideHeader({
     Key? key,
     this.index,
+    required this.letter,
+    required this.favorite,
   }) : super(key: key);
 
   final int? index;
+  final String letter;
+  final bool favorite;
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       child: Align(
         alignment: Alignment.centerLeft,
-        child: SizedBox(
-          height: 44.0,
-          width: 44.0,
-          child: Icon(
-            Icons.star,
-            color: Colors.blue,
-            size: 25,
-          ),
-        ),
+        child: (favorite)
+            ? const Icon(
+                Icons.star,
+                color: Colors.blue,
+                size: 25,
+              )
+            : Text(letter.toUpperCase(),
+                style: const TextStyle(
+                    fontSize: 24,
+                    color: Colors.blue,
+                    fontWeight: FontWeight.w500)),
       ),
     );
   }
@@ -125,87 +153,31 @@ class _ContactsListHeader extends StatelessWidget {
   }
 }
 
-class ContactsList extends StatelessWidget {
-  const ContactsList({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: const [
-        _ContactsListItem(),
-        _ContactsListItem(),
-        _ContactsListItem(),
-        _ContactsListItem(),
-        _ContactsListItem(),
-      ],
-    );
-  }
-}
-
-class _ContactsListItem extends StatelessWidget {
-  const _ContactsListItem({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.all(15.0),
-          child: Icon(
-            Icons.star,
-            color: Colors.blue,
-            size: 25,
-          ),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
-        Expanded(
-          child: Column(
-            children: const [
-              _ContactItem(),
-              _ContactItem(),
-              _ContactItem(),
-              _ContactItem(),
-              _ContactItem(),
-              _ContactItem(),
-              _ContactItem(),
-            ],
-          ),
-        )
-      ],
-    );
-  }
-}
-
 class _ContactItem extends StatelessWidget {
-  const _ContactItem({
-    Key? key,
-  }) : super(key: key);
+  const _ContactItem({Key? key, required this.contact}) : super(key: key);
+
+  final ContactModel contact;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
-      children: const [
+      children: [
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 6),
-          child: CircleAvatar(),
+          padding: const EdgeInsets.symmetric(vertical: 7),
+          child: CircleAvatar(
+            backgroundImage: NetworkImage(contact.imgUrl),
+            backgroundColor: Colors.transparent,
+          ),
         ),
         Expanded(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15.0),
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: Text(
-              'Antonio Estevez de la Osa Mayor y todos los santos',
+              contact.name,
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
+              style: const TextStyle(fontSize: 18),
             ),
           ),
         )

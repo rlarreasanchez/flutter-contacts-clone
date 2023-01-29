@@ -5,14 +5,16 @@ class ContactsUtils {
   static List<ContactListItemModel> getContactsStickyList(
       List<ContactModel> contactos) {
     List<String> headers = [
-      ...contactos.map((contacto) => contacto.name).toList()..sort()
+      ...contactos.map((contacto) => contacto.name[0]).toSet().toList()..sort()
     ];
+
     return headers
         .map((header) => ContactListItemModel(
             letter: header,
             contacts: contactos
                 .where((contacto) => header == contacto.name[0])
-                .toList()))
+                .toList()
+              ..sort((a, b) => a.name.compareTo(b.name))))
         .toList();
   }
 }
