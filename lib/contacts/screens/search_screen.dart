@@ -16,11 +16,12 @@ class SearchScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final searchTerm = ref.watch(searchTermProvider);
 
-    List<ContactItem> generateContactList(List<ContactModel> contactos) {
+    List<ContactItem> filterContactList(List<ContactModel> contactos) {
       if (searchTerm.isEmpty) return [];
       return contactos
-          .where((item) => removeDiacritics(item.name.toLowerCase())
-              .contains(removeDiacritics(searchTerm.toLowerCase())))
+          .where((contacto) =>
+              contacto.containsTermByName(searchTerm) ||
+              contacto.containsTermByEmail(searchTerm))
           .map((c) => ContactItem(
                 contact: c,
                 highlight: true,
@@ -47,7 +48,7 @@ class SearchScreen extends ConsumerWidget {
                         horizontal: 20, vertical: 10),
                     sliver: SliverToBoxAdapter(
                         child: Column(
-                      children: [...generateContactList(contactsFake)],
+                      children: [...filterContactList(contactsFake)],
                     )),
                   )
                 ],

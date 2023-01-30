@@ -7,7 +7,7 @@ class ContactsTagsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<TagItemModel> _items = [
+    final List<TagItemModel> items = [
       TagItemModel('Contactos telefónicos', Icons.phone_outlined),
       TagItemModel('Contactos de correo', Icons.mail_outline),
       TagItemModel('Empresa', Icons.business_outlined, true),
@@ -28,7 +28,7 @@ class ContactsTagsList extends StatelessWidget {
         const SizedBox(
           width: 10.0,
         ),
-        ...getTags(_items),
+        ...getTags(items),
         const SizedBox(
           width: 10.0,
         ),
