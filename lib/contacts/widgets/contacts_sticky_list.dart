@@ -35,6 +35,7 @@ class ContactsStickyList extends StatelessWidget {
     return DraggableScrollbar(
       heightScrollThumb: 70.0,
       controller: _controller,
+      contactsModels: ContactsUtils.getContactsStickyList(contactsFake),
       child: CustomScrollView(
         controller: _controller,
         slivers: [

@@ -1,3 +1,7 @@
+import 'dart:developer';
+
+import 'package:contactos_app/contacts/models/contact_listItem_model.dart';
+import 'package:contactos_app/contacts/utils/contacts_utils.dart';
 import 'package:flutter/material.dart';
 
 class DraggableScrollbar extends StatefulWidget {
@@ -5,13 +9,15 @@ class DraggableScrollbar extends StatefulWidget {
   final Widget child;
   final Widget? labelBubble;
   final ScrollController controller;
+  final List<ContactListItemModel> contactsModels;
 
   const DraggableScrollbar(
       {super.key,
       required this.heightScrollThumb,
       required this.child,
       required this.controller,
-      this.labelBubble});
+      this.labelBubble,
+      required this.contactsModels});
 
   @override
   DraggableScrollbarState createState() => DraggableScrollbarState();
@@ -25,12 +31,15 @@ class DraggableScrollbarState extends State<DraggableScrollbar> {
   //variable to track when scrollbar is dragged
   late bool _isDragInProcess;
 
+  late String _letter;
+
   @override
   void initState() {
     super.initState();
     _barOffset = 0.0;
     _viewOffset = 0.0;
     _isDragInProcess = false;
+    _letter = '';
   }
 
   //if list takes 300.0 pixels of height on screen and scrollthumb height is 40.0
@@ -96,16 +105,30 @@ class DraggableScrollbarState extends State<DraggableScrollbar> {
       if (_viewOffset > viewMaxScrollExtent) {
         _viewOffset = viewMaxScrollExtent;
       }
+
       widget.controller.jumpTo(_viewOffset);
+      getLetter(_viewOffset);
     });
   }
 
-  //this function process events when scroll controller changes it's position
-  //by scrollController.jumpTo or scrollController.animateTo functions.
-  //It can be when user scrolls, drags scrollbar (see line 139)
-  //or any other manipulation with scrollController outside this widget
-  changePosition(ScrollNotification notification) {
-    //if notification was fired when user drags we don't need to update scrollThumb position
+  void getLetter(double viewOffset) {
+    double headerHeight = 20.0;
+    List<ContactListScrollModel> scrollModels =
+        ContactsUtils.getScrollModelContacts(
+            widget.contactsModels,
+            headerHeight,
+            viewMaxScrollExtent,
+            ContactsUtils.getContactsHeight(
+                widget.contactsModels, viewMaxScrollExtent - headerHeight));
+
+    String currentLetter =
+        ContactsUtils.getScrollbarLetter(scrollModels, viewOffset);
+    setState(() {
+      _letter = currentLetter;
+    });
+  }
+
+  void changePosition(ScrollNotification notification) {
     if (_isDragInProcess) {
       return;
     }
@@ -154,7 +177,7 @@ class DraggableScrollbarState extends State<DraggableScrollbar> {
                 alignment: Alignment.topRight,
                 margin: EdgeInsets.only(top: _barOffset),
                 child: CustomScrollbarBubble(
-                  letter: 'B',
+                  letter: _letter,
                   heightScrollThumb: widget.heightScrollThumb,
                   dragInProcess: _isDragInProcess,
                 ))),

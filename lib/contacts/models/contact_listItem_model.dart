@@ -11,3 +11,14 @@ class ContactListItemModel {
     required this.contacts,
   }) : super();
 }
+
+class ContactListScrollModel {
+  final String letter;
+  double startPosition;
+  double endPosition;
+
+  ContactListScrollModel(
+      {required this.letter,
+      required this.startPosition,
+      required this.endPosition});
+}
