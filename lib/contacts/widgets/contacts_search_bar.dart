@@ -1,5 +1,5 @@
-import 'package:contactos_app/contacts/screens/search_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:contactos_app/contacts/screens/search_screen.dart';
 
 class ContactsSearchBar extends StatelessWidget {
   const ContactsSearchBar({
@@ -18,20 +18,6 @@ class ContactsSearchBar extends StatelessWidget {
                   Animation<double> secondaryAnimation) {
                 return const SearchScreen();
               },
-              transitionsBuilder: (BuildContext context,
-                  Animation<double> animation,
-                  Animation<double> secondaryAnimation,
-                  Widget child) {
-                return Align(
-                    child: SlideTransition(
-                  position: Tween<Offset>(
-                    begin: const Offset(0.0, -1.0),
-                    end: const Offset(0.0, 0.0),
-                  ).animate(animation),
-                  child: child,
-                ));
-              },
-              transitionDuration: const Duration(milliseconds: 200),
             ),
           );
         },
