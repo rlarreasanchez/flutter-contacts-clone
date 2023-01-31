@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:contactos_app/contacts/models/contact_listItem_model.dart';
-import 'package:contactos_app/contacts/models/contact_model.dart';
+import 'package:contactos_app/features/contacts/models/contact_listItem_model.dart';
+import 'package:contactos_app/features/contact/models/contact_model.dart';
 
 class ContactsUtils {
   static List<ContactListItemModel> getContactsStickyList(

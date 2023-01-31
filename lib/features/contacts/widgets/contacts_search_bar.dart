@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:contactos_app/contacts/screens/search_screen.dart';
+import 'package:contactos_app/features/search/screens/search_screen.dart';
 
 class ContactsSearchBar extends StatelessWidget {
   const ContactsSearchBar({

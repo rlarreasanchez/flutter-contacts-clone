@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:contactos_app/contacts/widgets/contacts_sticky_list.dart';
-import 'package:contactos_app/contacts/widgets/contacts_search_bar.dart';
-import 'package:contactos_app/contacts/widgets/contacts_tags_list.dart';
+import 'package:contactos_app/features/contacts/widgets/contacts_widgets.dart';
 
 class ContactsScreen extends StatelessWidget {
   const ContactsScreen({super.key});

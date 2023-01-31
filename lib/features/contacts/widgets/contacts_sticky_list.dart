@@ -1,11 +1,10 @@
-import 'package:contactos_app/contacts/widgets/contact_item.dart';
 import 'package:flutter/material.dart';
-import 'package:contactos_app/contacts/widgets/draggable_scrollbar.dart';
-import 'package:contactos_app/contacts/data/contacts_fake.dart';
-import 'package:contactos_app/contacts/models/contact_listItem_model.dart';
-import 'package:contactos_app/contacts/models/contact_model.dart';
-import 'package:contactos_app/contacts/utils/contacts_utils.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
+import 'package:contactos_app/features/contacts/utils/contacts_utils.dart';
+import 'package:contactos_app/features/contacts/data/contacts_fake.dart';
+import 'package:contactos_app/features/contact/models/contact_model.dart';
+import 'package:contactos_app/features/contacts/models/contact_listItem_model.dart';
+import 'package:contactos_app/features/contacts/widgets/contacts_widgets.dart';
 
 class ContactsStickyList extends StatelessWidget {
   final ScrollController _controller = ScrollController();
@@ -166,39 +165,3 @@ class _ContactsListHeader extends StatelessWidget {
     );
   }
 }
-
-// class _ContactItem extends StatelessWidget {
-//   const _ContactItem({Key? key, required this.contact}) : super(key: key);
-
-//   final ContactModel contact;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Padding(
-//       padding: const EdgeInsets.only(left: 10),
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.start,
-//         children: [
-//           Padding(
-//             padding: const EdgeInsets.symmetric(vertical: 7),
-//             child: CircleAvatar(
-//               backgroundImage: NetworkImage(contact.imgUrl),
-//               backgroundColor: Colors.transparent,
-//             ),
-//           ),
-//           Expanded(
-//             child: Padding(
-//               padding: const EdgeInsets.symmetric(horizontal: 15.0),
-//               child: Text(
-//                 contact.name,
-//                 overflow: TextOverflow.ellipsis,
-//                 maxLines: 1,
-//                 style: const TextStyle(fontSize: 18),
-//               ),
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }

@@ -1,6 +1,6 @@
-import 'package:contactos_app/contacts/widgets/contacts_tag.dart';
-import 'package:contactos_app/contacts/models/tag_item_model.dart';
 import 'package:flutter/material.dart';
+import 'package:contactos_app/features/contacts/models/tag_item_model.dart';
+import 'package:contactos_app/features/contacts/widgets/contacts_widgets.dart';
 
 class ContactsTagsList extends StatelessWidget {
   const ContactsTagsList({super.key});

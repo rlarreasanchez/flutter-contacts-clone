@@ -1,8 +1,8 @@
-import 'package:contactos_app/contacts/screens/config_screen.dart';
-import 'package:contactos_app/contacts/screens/contacts_screen.dart';
-import 'package:contactos_app/contacts/screens/favorites_screen.dart';
-import 'package:contactos_app/home/components/animated_button.dart';
-import 'package:contactos_app/home/models/tab_item_model.dart';
+import 'package:contactos_app/features/config/screens/config_screen.dart';
+import 'package:contactos_app/features/contacts/screens/contacts_screen.dart';
+import 'package:contactos_app/features/favorites/screens/favorites_screen.dart';
+import 'package:contactos_app/features/home/widgets/animated_button.dart';
+import 'package:contactos_app/features/home/models/tab_item_model.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {

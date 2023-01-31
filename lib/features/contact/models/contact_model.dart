@@ -1,4 +1,4 @@
-import 'package:contactos_app/constants.dart';
+import 'package:contactos_app/constants/ui_constants.dart';
 import 'package:contactos_app/shared/utils/utils.dart';
 import 'package:diacritic/diacritic.dart';
 import 'package:flutter/animation.dart';
@@ -34,8 +34,8 @@ class ContactModel {
   }
 
   Color getColor() {
-    final int nColors = Constants.contactsColors.length;
+    final int nColors = UiConstants.contactsColors.length;
 
-    return Constants.contactsColors[Utils.getRandomInt(0, nColors)];
+    return UiConstants.contactsColors[Utils.getRandomInt(0, nColors)];
   }
 }

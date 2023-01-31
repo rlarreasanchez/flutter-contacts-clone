@@ -1,4 +1,4 @@
-import 'package:contactos_app/contacts/models/contact_model.dart';
+import 'package:contactos_app/features/contact/models/contact_model.dart';
 
 class ContactListItemModel {
   final String? letter;

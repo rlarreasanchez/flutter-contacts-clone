@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:contactos_app/contacts/data/contacts_fake.dart';
-import 'package:contactos_app/contacts/models/contact_model.dart';
-import 'package:contactos_app/contacts/widgets/contact_item.dart';
+import 'package:contactos_app/features/contacts/data/contacts_fake.dart';
+import 'package:contactos_app/features/contact/models/contact_model.dart';
+import 'package:contactos_app/features/contacts/widgets/contact_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

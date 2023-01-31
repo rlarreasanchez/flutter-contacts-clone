@@ -1,8 +1,8 @@
-import 'package:contactos_app/main.dart';
 import 'package:flutter/material.dart';
-import 'package:contactos_app/contacts/models/contact_model.dart';
-import 'package:contactos_app/contacts/widgets/regex_text_highlight.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:contactos_app/main.dart';
+import 'package:contactos_app/features/contact/models/contact_model.dart';
+import 'package:contactos_app/features/contacts/widgets/contacts_widgets.dart';
 
 class ContactItem extends ConsumerWidget {
   final ContactModel contact;

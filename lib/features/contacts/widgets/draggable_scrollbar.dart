@@ -1,8 +1,6 @@
-import 'dart:developer';
-
-import 'package:contactos_app/contacts/models/contact_listItem_model.dart';
-import 'package:contactos_app/contacts/utils/contacts_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:contactos_app/features/contacts/utils/contacts_utils.dart';
+import 'package:contactos_app/features/contacts/models/contact_listItem_model.dart';
 
 class DraggableScrollbar extends StatefulWidget {
   final double heightScrollThumb;

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:contactos_app/contacts/models/contact_model.dart';
-import 'package:contactos_app/contacts/screens/contact_screen.dart';
-import 'package:contactos_app/contacts/screens/search_screen.dart';
-import 'package:contactos_app/home/screens/home_screen.dart';
+import 'package:contactos_app/features/contact/models/contact_model.dart';
+import 'package:contactos_app/features/contact/screens/contact_screen.dart';
+import 'package:contactos_app/features/search/screens/search_screen.dart';
+import 'package:contactos_app/features/home/screens/home_screen.dart';
 
 final contactProvider = StateProvider<ContactModel?>((ref) => null);
 
@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
         routes: {
           'home': (context) => const HomeScreen(),
           'search': (context) => const SearchScreen(),
-          'contact': (context) => const ContactScreen(),
+          'contact': (context) => ContactScreen(),
         });
   }
 }
