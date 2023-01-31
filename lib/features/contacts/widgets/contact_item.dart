@@ -25,11 +25,15 @@ class ContactItem extends ConsumerWidget {
       showEmail = true;
     }
 
-    return GestureDetector(
+    return InkWell(
       onTap: () {
-        ref.read(contactProvider.notifier).state = contact;
-        Navigator.pushNamed(context, 'contact', arguments: contact);
+        Future.delayed(const Duration(milliseconds: 150), () {
+          ref.read(contactProvider.notifier).state = contact;
+          Navigator.pushNamed(context, 'contact', arguments: contact);
+        });
       },
+      splashColor: Colors.grey[400],
+      borderRadius: BorderRadius.circular(20),
       child: Padding(
         padding: const EdgeInsets.only(left: 10),
         child: Row(
