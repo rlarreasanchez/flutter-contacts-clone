@@ -60,8 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       body: _screens[_selectedIndex],
       bottomNavigationBar: SizedBox(
@@ -94,6 +93,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-    ));
+    );
   }
 }

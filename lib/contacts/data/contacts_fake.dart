@@ -3,15 +3,13 @@ import 'package:contactos_app/contacts/models/contact_model.dart';
 List<ContactModel> contactsFake = [
   ContactModel(
     id: 1,
-    imgUrl:
-        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80',
+    imgUrl: '',
     name: 'Amalia Amigo',
     email: 'amalia.amigo@email.com',
   ),
   ContactModel(
     id: 2,
-    imgUrl:
-        'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=761&q=80',
+    imgUrl: '',
     name: 'Aitana Estévez',
     email: 'aitana.estévez@email.com',
   ),
@@ -39,8 +37,7 @@ List<ContactModel> contactsFake = [
   ),
   ContactModel(
     id: 6,
-    imgUrl:
-        'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=761&q=80',
+    imgUrl: '',
     name: 'Alberto Márquez',
     email: 'alberto.márquez@email.com',
     favorite: true,
@@ -54,8 +51,7 @@ List<ContactModel> contactsFake = [
   ),
   ContactModel(
     id: 8,
-    imgUrl:
-        'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=761&q=80',
+    imgUrl: '',
     name: 'Esteban Albarez',
     email: 'esteban.albarez@email.com',
   ),
@@ -71,7 +67,6 @@ List<ContactModel> contactsFake = [
       imgUrl:
           'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80',
       name: 'Pablo Caballero',
-      email: 'pablo.caballero@email.com',
       favorite: true),
   ContactModel(
       id: 11,

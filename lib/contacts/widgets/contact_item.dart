@@ -1,8 +1,10 @@
+import 'package:contactos_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:contactos_app/contacts/models/contact_model.dart';
 import 'package:contactos_app/contacts/widgets/regex_text_highlight.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ContactItem extends StatelessWidget {
+class ContactItem extends ConsumerWidget {
   final ContactModel contact;
   final String? highlightText;
   final bool highlight;
@@ -15,7 +17,7 @@ class ContactItem extends StatelessWidget {
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     bool showEmail = false;
     if (highlight && contact.containsTermByName(highlightText ?? '')) {
       showEmail = false;
@@ -23,50 +25,65 @@ class ContactItem extends StatelessWidget {
       showEmail = true;
     }
 
-    return Padding(
-      padding: const EdgeInsets.only(left: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 7),
-            child: CircleAvatar(
-              backgroundImage: NetworkImage(contact.imgUrl),
-              backgroundColor: Colors.transparent,
+    return GestureDetector(
+      onTap: () {
+        ref.read(contactProvider.notifier).state = contact;
+        Navigator.pushNamed(context, 'contact', arguments: contact);
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 7),
+              child: contact.imgUrl.isEmpty
+                  ? CircleAvatar(
+                      backgroundColor: contact.color,
+                      child: Text(
+                        contact.name[0].toUpperCase(),
+                        style:
+                            const TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                    )
+                  : CircleAvatar(
+                      backgroundImage: NetworkImage(contact.imgUrl),
+                      backgroundColor: Colors.transparent,
+                    ),
             ),
-          ),
-          Expanded(
-            child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    highlight
-                        ? RegexTextHighlight(
-                            text: contact.name,
-                            highlightRegex: RegExp(highlightText ?? '',
-                                caseSensitive: false),
-                            highlightStyle: highlighStyle,
-                            nonHighlightStyle: notHighlighStyle)
-                        : Text(
-                            contact.name,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: notHighlighStyle,
-                          ),
-                    showEmail
-                        ? RegexTextHighlight(
-                            text: contact.email,
-                            highlightRegex: RegExp(highlightText ?? '',
-                                caseSensitive: false),
-                            highlightStyle: highlighStyleSecondary,
-                            nonHighlightStyle: notHighlighStyleSecondary)
-                        : const SizedBox()
-                  ],
-                )),
-          )
-        ],
+            Expanded(
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      highlight
+                          ? RegexTextHighlight(
+                              text: contact.name,
+                              highlightRegex: RegExp(highlightText ?? '',
+                                  caseSensitive: false),
+                              highlightStyle: highlighStyle,
+                              nonHighlightStyle: notHighlighStyle)
+                          : Text(
+                              contact.name,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: notHighlighStyle,
+                            ),
+                      showEmail && contact.email.isEmpty
+                          ? RegexTextHighlight(
+                              text: contact.email,
+                              highlightRegex: RegExp(highlightText ?? '',
+                                  caseSensitive: false),
+                              highlightStyle: highlighStyleSecondary,
+                              nonHighlightStyle: notHighlighStyleSecondary)
+                          : const SizedBox()
+                    ],
+                  )),
+            )
+          ],
+        ),
       ),
     );
   }
