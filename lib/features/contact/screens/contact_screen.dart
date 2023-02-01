@@ -5,7 +5,7 @@ import 'package:contactos_app/main.dart';
 import 'package:contactos_app/constants/ui_constants.dart';
 import 'package:contactos_app/features/contact/widgets/contact_widgets.dart';
 
-final showAppbarTitle = StateProvider<bool>((ref) => false);
+final showAppbarTitle = StateProvider.autoDispose<bool>((ref) => false);
 
 class ContactScreen extends ConsumerWidget {
   final ScrollController _controller = ScrollController();
