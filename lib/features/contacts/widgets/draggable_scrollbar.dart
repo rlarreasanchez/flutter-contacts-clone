@@ -46,6 +46,12 @@ class DraggableScrollbarState extends State<DraggableScrollbar> {
     _letter = '';
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    t.cancel();
+  }
+
   //if list takes 300.0 pixels of height on screen and scrollthumb height is 40.0
   //then max bar offset is 260.0
   double get barMaxScrollExtent =>
