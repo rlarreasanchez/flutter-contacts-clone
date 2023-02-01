@@ -39,6 +39,7 @@ class ContactScreen extends ConsumerWidget {
         body: NotificationListener<ScrollNotification>(
             onNotification: checkShowAppbarTitle,
             child: CustomScrollView(
+              physics: const BouncingScrollPhysics(),
               controller: _controller,
               slivers: [
                 const ContactInfoHeader(),

@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:contactos_app/features/contacts/utils/contacts_utils.dart';
 import 'package:contactos_app/features/contacts/models/contact_listItem_model.dart';
@@ -30,6 +33,9 @@ class DraggableScrollbarState extends State<DraggableScrollbar> {
   late bool _isDragInProcess;
 
   late String _letter;
+
+  bool _showScrollbar = false;
+  Timer t = Timer(const Duration(seconds: 0), () {});
 
   @override
   void initState() {
@@ -70,13 +76,30 @@ class DraggableScrollbarState extends State<DraggableScrollbar> {
     return scrollViewDelta * barMaxScrollExtent / viewMaxScrollExtent;
   }
 
+  void showScrollbar() {
+    t.cancel();
+    setState(() {
+      _showScrollbar = true;
+    });
+  }
+
+  void hideScrollbar() {
+    t = Timer(const Duration(milliseconds: 1500), () {
+      setState(() {
+        _showScrollbar = false;
+      });
+    });
+  }
+
   void _onVerticalDragStart(DragStartDetails details) {
+    showScrollbar();
     setState(() {
       _isDragInProcess = true;
     });
   }
 
   void _onVerticalDragEnd(DragEndDetails details) {
+    hideScrollbar();
     setState(() {
       _isDragInProcess = false;
     });
@@ -153,6 +176,11 @@ class DraggableScrollbarState extends State<DraggableScrollbar> {
         if (_viewOffset > viewMaxScrollExtent) {
           _viewOffset = viewMaxScrollExtent;
         }
+        showScrollbar();
+      }
+
+      if (notification is ScrollEndNotification) {
+        hideScrollbar();
       }
     });
   }
@@ -166,7 +194,10 @@ class DraggableScrollbarState extends State<DraggableScrollbar> {
       },
       child: Stack(children: <Widget>[
         widget.child,
-        const _TrackPathScrollbar(),
+        _FadeInOut(
+          animate: _showScrollbar,
+          child: const _TrackPathScrollbar(),
+        ),
         GestureDetector(
             onVerticalDragStart: _onVerticalDragStart,
             onVerticalDragUpdate: _onVerticalDragUpdate,
@@ -174,12 +205,41 @@ class DraggableScrollbarState extends State<DraggableScrollbar> {
             child: Container(
                 alignment: Alignment.topRight,
                 margin: EdgeInsets.only(top: _barOffset),
-                child: CustomScrollbarBubble(
-                  letter: _letter,
-                  heightScrollThumb: widget.heightScrollThumb,
-                  dragInProcess: _isDragInProcess,
+                child: _FadeInOut(
+                  animate: _showScrollbar,
+                  child: CustomScrollbarBubble(
+                    letter: _letter,
+                    heightScrollThumb: widget.heightScrollThumb,
+                    dragInProcess: _isDragInProcess,
+                  ),
                 ))),
       ]),
+    );
+  }
+}
+
+class _FadeInOut extends StatelessWidget {
+  const _FadeInOut({
+    Key? key,
+    required this.animate,
+    required this.child,
+  }) : super(key: key);
+
+  final bool animate;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeIn(
+      duration: const Duration(milliseconds: 200),
+      child: SlideInRight(
+        duration: const Duration(milliseconds: 100),
+        animate: animate,
+        child: FadeOut(
+            duration: const Duration(milliseconds: 500),
+            animate: !animate,
+            child: child),
+      ),
     );
   }
 }
@@ -198,16 +258,15 @@ class CustomScrollbarBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: heightScrollThumb,
-      width: 100.0,
+      width: dragInProcess ? 100.0 : 30,
       color: Colors.transparent,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          dragInProcess && letter.isNotEmpty
-              ? _BubblePopupLetter(
-                  letter: letter,
-                )
-              : const SizedBox(),
+          if (dragInProcess && letter.isNotEmpty)
+            _BubblePopupLetter(
+              letter: letter,
+            ),
           Container(
             width: 8,
             color: dragInProcess ? Colors.blue : Colors.black45,
