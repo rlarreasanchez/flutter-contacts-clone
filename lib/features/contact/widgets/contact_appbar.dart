@@ -58,9 +58,9 @@ class _ContactAppBarTitle extends ConsumerWidget {
         ? FadeIn(
             duration: const Duration(milliseconds: 400),
             child: Text(
-              title,
-              maxLines: 1,
+              title.replaceAll(' ', '\u{000A0}'),
               overflow: TextOverflow.ellipsis,
+              maxLines: 1,
               style: const TextStyle(color: Colors.black),
             ),
           )
