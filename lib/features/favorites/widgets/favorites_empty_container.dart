@@ -1,3 +1,4 @@
+import 'package:contactos_app/features/favorites/screens/select_favorites_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:contactos_app/shared/widgets/shared_widgets.dart';
 
@@ -51,7 +52,16 @@ class FavoritesEmptyContainer extends StatelessWidget {
           height: 15,
         ),
         OutlinedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).push(
+              PageRouteBuilder(
+                pageBuilder: (BuildContext context, Animation<double> animation,
+                    Animation<double> secondaryAnimation) {
+                  return const SelectFavoritesScreen();
+                },
+              ),
+            );
+          },
           style: ButtonStyle(
               minimumSize: const MaterialStatePropertyAll(Size.fromHeight(50)),
               overlayColor: MaterialStatePropertyAll(Colors.grey[400]),

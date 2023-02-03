@@ -1,3 +1,4 @@
+import 'package:contactos_app/features/favorites/screens/select_favorites_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:contactos_app/features/contact/models/contact_model.dart';
 import 'package:contactos_app/features/contacts/data/contacts_fake.dart';
@@ -79,7 +80,17 @@ class _FavoritesTitleAction extends StatelessWidget {
               fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black87),
         ),
         TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                PageRouteBuilder(
+                  pageBuilder: (BuildContext context,
+                      Animation<double> animation,
+                      Animation<double> secondaryAnimation) {
+                    return const SelectFavoritesScreen();
+                  },
+                ),
+              );
+            },
             style: ButtonStyle(
               overlayColor: MaterialStatePropertyAll(Colors.grey[400]),
             ),

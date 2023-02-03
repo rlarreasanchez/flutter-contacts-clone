@@ -8,12 +8,14 @@ class ContactItem extends ConsumerWidget {
   final ContactModel contact;
   final String? highlightText;
   final bool highlight;
+  final bool withFavIcon;
 
   const ContactItem(
       {Key? key,
       required this.contact,
       this.highlightText,
-      this.highlight = false})
+      this.highlight = false,
+      this.withFavIcon = false})
       : super(key: key);
 
   @override
@@ -25,12 +27,12 @@ class ContactItem extends ConsumerWidget {
       showEmail = true;
     }
     final TextStyle highlighStyle = TextStyle(
-        fontSize: 18,
+        fontSize: 16,
         color: Theme.of(context).primaryColor,
         fontWeight: FontWeight.w500);
 
     const TextStyle notHighlighStyle =
-        TextStyle(fontSize: 18, color: Colors.black);
+        TextStyle(fontSize: 16, color: Colors.black);
 
     final TextStyle highlighStyleSecondary = TextStyle(
         fontSize: 14,
@@ -100,7 +102,23 @@ class ContactItem extends ConsumerWidget {
                           : const SizedBox()
                     ],
                   )),
-            )
+            ),
+            if (withFavIcon)
+              Padding(
+                padding: const EdgeInsets.only(right: 40.0),
+                child: IconButton(
+                    // TODO: Llamar a hacer el toggle de favorito del contacto
+                    onPressed: () {},
+                    icon: (contact.favorite ?? false)
+                        ? Icon(
+                            Icons.star,
+                            color: Theme.of(context).primaryColor,
+                          )
+                        : const Icon(
+                            Icons.star_outline,
+                            color: Colors.black54,
+                          )),
+              )
           ],
         ),
       ),

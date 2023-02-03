@@ -11,6 +11,7 @@ class DraggableScrollbar extends StatefulWidget {
   final Widget? labelBubble;
   final ScrollController controller;
   final List<ContactListItemModel> contactsModels;
+  final double offsetHeight;
 
   const DraggableScrollbar(
       {super.key,
@@ -18,6 +19,7 @@ class DraggableScrollbar extends StatefulWidget {
       required this.child,
       required this.controller,
       this.labelBubble,
+      this.offsetHeight = 20,
       required this.contactsModels});
 
   @override
@@ -139,14 +141,13 @@ class DraggableScrollbarState extends State<DraggableScrollbar> {
   }
 
   void getLetter(double viewOffset) {
-    double headerHeight = 20.0;
     List<ContactListScrollModel> scrollModels =
         ContactsUtils.getScrollModelContacts(
             widget.contactsModels,
-            headerHeight,
+            widget.offsetHeight,
             viewMaxScrollExtent,
-            ContactsUtils.getContactsHeight(
-                widget.contactsModels, viewMaxScrollExtent - headerHeight));
+            ContactsUtils.getContactsHeight(widget.contactsModels,
+                viewMaxScrollExtent - widget.offsetHeight));
 
     String currentLetter =
         ContactsUtils.getScrollbarLetter(scrollModels, viewOffset);

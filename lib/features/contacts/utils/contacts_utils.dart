@@ -1,14 +1,26 @@
-import 'dart:developer';
-
 import 'package:contactos_app/features/contacts/models/contact_listItem_model.dart';
 import 'package:contactos_app/features/contact/models/contact_model.dart';
 
 class ContactsUtils {
   static List<ContactListItemModel> getContactsStickyList(
-      List<ContactModel> contactos) {
+      List<ContactModel> contactos,
+      [bool withFavorites = true]) {
     List<String> headers = [
       ...contactos.map((contacto) => contacto.name[0]).toSet().toList()..sort()
     ];
+
+    List<ContactListItemModel> contactsStickyList = headers
+        .map((header) => ContactListItemModel(
+            letter: header,
+            contacts: contactos
+                .where((contacto) => header == contacto.name[0])
+                .toList()
+              ..sort((a, b) => a.name.compareTo(b.name))))
+        .toList();
+
+    if (!withFavorites) {
+      return contactsStickyList;
+    }
 
     List<ContactModel> favContacts =
         contactos.where((c) => c.favorite ?? false).toList();
@@ -16,17 +28,7 @@ class ContactsUtils {
     final ContactListItemModel favoritesItem =
         ContactListItemModel(contacts: favContacts, favorite: true);
 
-    return [
-      favoritesItem,
-      ...headers
-          .map((header) => ContactListItemModel(
-              letter: header,
-              contacts: contactos
-                  .where((contacto) => header == contacto.name[0])
-                  .toList()
-                ..sort((a, b) => a.name.compareTo(b.name))))
-          .toList()
-    ];
+    return [favoritesItem, ...contactsStickyList];
   }
 
   static List<ContactListScrollModel> getScrollModelContacts(
