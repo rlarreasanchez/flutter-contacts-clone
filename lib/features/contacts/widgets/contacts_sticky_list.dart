@@ -103,15 +103,15 @@ class _SideHeader extends StatelessWidget {
       child: Align(
         alignment: Alignment.centerLeft,
         child: (favorite)
-            ? const Icon(
+            ? Icon(
                 Icons.star,
-                color: Colors.blue,
+                color: Theme.of(context).primaryColor,
                 size: 25,
               )
             : Text(letter.toUpperCase(),
-                style: const TextStyle(
+                style: TextStyle(
                     fontSize: 24,
-                    color: Colors.blue,
+                    color: Theme.of(context).primaryColor,
                     fontWeight: FontWeight.w500)),
       ),
     );

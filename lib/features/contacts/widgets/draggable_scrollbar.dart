@@ -275,7 +275,8 @@ class CustomScrollbarBubble extends StatelessWidget {
             ),
           Container(
             width: 8,
-            color: dragInProcess ? Colors.blue : Colors.black45,
+            color:
+                dragInProcess ? Theme.of(context).primaryColor : Colors.black45,
           ),
         ],
       ),
@@ -301,7 +302,7 @@ class _BubblePopupLetter extends StatelessWidget {
             right: 0,
             child: CustomPaint(
               painter: _TrianglePainter(
-                strokeColor: Colors.blue,
+                strokeColor: Theme.of(context).primaryColor,
                 strokeWidth: 10,
                 paintingStyle: PaintingStyle.fill,
               ),
@@ -312,7 +313,7 @@ class _BubblePopupLetter extends StatelessWidget {
             ),
           ),
           CircleAvatar(
-            backgroundColor: Colors.blue,
+            backgroundColor: Theme.of(context).primaryColor,
             maxRadius: 40,
             child: Text(
               letter,

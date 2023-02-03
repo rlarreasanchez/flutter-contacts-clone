@@ -24,6 +24,21 @@ class ContactItem extends ConsumerWidget {
     } else if (highlight && contact.containsTermByEmail(highlightText ?? '')) {
       showEmail = true;
     }
+    final TextStyle highlighStyle = TextStyle(
+        fontSize: 18,
+        color: Theme.of(context).primaryColor,
+        fontWeight: FontWeight.w500);
+
+    const TextStyle notHighlighStyle =
+        TextStyle(fontSize: 18, color: Colors.black);
+
+    final TextStyle highlighStyleSecondary = TextStyle(
+        fontSize: 14,
+        color: Theme.of(context).primaryColor,
+        fontWeight: FontWeight.w500);
+
+    const TextStyle notHighlighStyleSecondary =
+        TextStyle(fontSize: 14, color: Colors.black54);
 
     return InkWell(
       onTap: () {
@@ -91,16 +106,4 @@ class ContactItem extends ConsumerWidget {
       ),
     );
   }
-
-  final TextStyle highlighStyle = const TextStyle(
-      fontSize: 18, color: Colors.blue, fontWeight: FontWeight.w500);
-
-  final TextStyle notHighlighStyle =
-      const TextStyle(fontSize: 18, color: Colors.black);
-
-  final TextStyle highlighStyleSecondary = const TextStyle(
-      fontSize: 14, color: Colors.blue, fontWeight: FontWeight.w500);
-
-  final TextStyle notHighlighStyleSecondary =
-      const TextStyle(fontSize: 14, color: Colors.black54);
 }

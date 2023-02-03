@@ -1,7 +1,7 @@
-import 'package:contactos_app/constants/ui_constants.dart';
-import 'package:contactos_app/shared/utils/utils.dart';
 import 'package:diacritic/diacritic.dart';
 import 'package:flutter/animation.dart';
+import 'package:contactos_app/constants/ui_constants.dart';
+import 'package:contactos_app/shared/utils/utils.dart';
 
 class ContactModel {
   final int id;

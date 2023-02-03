@@ -1,8 +1,9 @@
+import 'package:contactos_app/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:contactos_app/features/contact/models/contact_model.dart';
 import 'package:contactos_app/features/contact/screens/contact_screen.dart';
-import 'package:contactos_app/features/search/screens/search_screen.dart';
+import 'package:contactos_app/features/contacts/screens/search_screen.dart';
 import 'package:contactos_app/features/home/screens/home_screen.dart';
 
 final contactProvider = StateProvider<ContactModel?>((ref) => null);
@@ -24,12 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'ContactosApp',
-        theme: ThemeData(
-            primarySwatch: Colors.blue,
-            useMaterial3: true,
-            appBarTheme: const AppBarTheme(
-              elevation: 0, // This removes the shadow from all App Bars.
-            )),
+        theme: appTheme,
         initialRoute: 'home',
         routes: {
           'home': (context) => const HomeScreen(),

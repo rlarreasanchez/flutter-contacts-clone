@@ -16,6 +16,7 @@ class SearchScreen extends ConsumerWidget {
     final searchTerm = ref.watch(searchTermProvider);
 
     List<ContactItem> filterContactList(List<ContactModel> contactos) {
+      // TODO: Si no hay searchTerm debe de devolver historial del storage
       if (searchTerm.isEmpty) return [];
       return contactos
           .where((contacto) =>

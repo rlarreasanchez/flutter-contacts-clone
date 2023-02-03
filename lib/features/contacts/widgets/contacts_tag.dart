@@ -29,6 +29,7 @@ class ContactsTag extends StatelessWidget {
           icon: Icon(
             icon,
             size: 20,
+            color: Theme.of(context).primaryColor,
           )),
     );
   }
