@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:animate_do/animate_do.dart';
 import 'package:contactos_app/features/contacts/data/contacts_fake.dart';
 import 'package:contactos_app/features/contact/models/contact_model.dart';
 import 'package:contactos_app/features/contacts/widgets/contact_item.dart';
@@ -15,17 +16,19 @@ class SearchScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final searchTerm = ref.watch(searchTermProvider);
 
-    List<ContactItem> filterContactList(List<ContactModel> contactos) {
+    List<Widget> filterContactList(List<ContactModel> contactos) {
       // TODO: Si no hay searchTerm debe de devolver historial del storage
       if (searchTerm.isEmpty) return [];
       return contactos
           .where((contacto) =>
               contacto.containsTermByName(searchTerm) ||
               contacto.containsTermByEmail(searchTerm))
-          .map((c) => ContactItem(
-                contact: c,
-                highlight: true,
-                highlightText: searchTerm,
+          .map((c) => FadeIn(
+                child: ContactItem(
+                  contact: c,
+                  highlight: true,
+                  highlightText: searchTerm,
+                ),
               ))
           .toList();
     }
@@ -37,9 +40,6 @@ class SearchScreen extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const _SearchHeader(),
-              const SizedBox(
-                height: 10,
-              ),
               Expanded(
                   child: CustomScrollView(
                 slivers: [
@@ -68,7 +68,7 @@ class _SearchHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 80,
+      height: 70,
       decoration: const BoxDecoration(
           border: Border(bottom: BorderSide(width: 1, color: Colors.black12))),
       child: Row(

@@ -1,3 +1,4 @@
+import 'package:contactos_app/constants/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:contactos_app/main.dart';
@@ -61,15 +62,21 @@ class ContactItem extends ConsumerWidget {
               child: contact.imgUrl.isEmpty
                   ? CircleAvatar(
                       backgroundColor: contact.color,
+                      radius: 20,
                       child: Text(
                         contact.name[0].toUpperCase(),
                         style:
                             const TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     )
-                  : CircleAvatar(
-                      backgroundImage: NetworkImage(contact.imgUrl),
-                      backgroundColor: Colors.transparent,
+                  : ClipRRect(
+                      borderRadius: BorderRadius.circular(25.0),
+                      child: FadeInImage.memoryNetwork(
+                          fit: BoxFit.cover,
+                          width: 40,
+                          height: 40,
+                          placeholder: UiConstants.kTransparentImage,
+                          image: contact.imgUrl),
                     ),
             ),
             Expanded(

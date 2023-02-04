@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
 class SingleGridItem extends StatelessWidget {
@@ -16,39 +17,41 @@ class SingleGridItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      child: InkWell(
-        onTap: onTap,
-        child: Column(
-          children: [
-            Expanded(
-              child: imgUrl.isEmpty
-                  ? CircleAvatar(
-                      backgroundColor: color,
-                      minRadius: 24,
-                      child: Text(
-                        title[0].toUpperCase(),
-                        style:
-                            const TextStyle(fontSize: 32, color: Colors.white),
+      child: FadeIn(
+        child: InkWell(
+          onTap: onTap,
+          child: Column(
+            children: [
+              Expanded(
+                child: imgUrl.isEmpty
+                    ? CircleAvatar(
+                        backgroundColor: color,
+                        minRadius: 24,
+                        child: Text(
+                          title[0].toUpperCase(),
+                          style: const TextStyle(
+                              fontSize: 32, color: Colors.white),
+                        ),
+                      )
+                    : CircleAvatar(
+                        backgroundImage: NetworkImage(imgUrl),
+                        minRadius: 24,
+                        backgroundColor: Colors.transparent,
                       ),
-                    )
-                  : CircleAvatar(
-                      backgroundImage: NetworkImage(imgUrl),
-                      minRadius: 24,
-                      backgroundColor: Colors.transparent,
-                    ),
-            ),
-            Text(
-              title,
-              maxLines: 2,
-              textAlign: TextAlign.center,
-              softWrap: true,
-              overflow: TextOverflow.fade,
-              style: const TextStyle(
-                  color: Colors.black87,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12),
-            ),
-          ],
+              ),
+              Text(
+                title,
+                maxLines: 2,
+                textAlign: TextAlign.center,
+                softWrap: true,
+                overflow: TextOverflow.fade,
+                style: const TextStyle(
+                    color: Colors.black87,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12),
+              ),
+            ],
+          ),
         ),
       ),
     );

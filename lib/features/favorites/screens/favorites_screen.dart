@@ -77,7 +77,7 @@ class _FavoritesTitleAction extends StatelessWidget {
         const Text(
           'Favoritos',
           style: TextStyle(
-              fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black87),
+              fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black87),
         ),
         TextButton(
             onPressed: () {
@@ -97,7 +97,7 @@ class _FavoritesTitleAction extends StatelessWidget {
             child: Text(
               'Añadir',
               style: TextStyle(
-                  color: Theme.of(context).primaryColor, fontSize: 16),
+                  color: Theme.of(context).primaryColor, fontSize: 14),
             )),
       ],
     );
