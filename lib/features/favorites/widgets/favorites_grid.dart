@@ -15,8 +15,8 @@ class FavoritesGrid extends ConsumerWidget {
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 4,
             mainAxisSpacing: 5,
-            crossAxisSpacing: 15,
-            childAspectRatio: 0.5),
+            crossAxisSpacing: 25,
+            childAspectRatio: 0.6),
         delegate: SliverChildListDelegate(
           [
             ...contacts.map((contact) => SingleGridItem(

@@ -11,12 +11,14 @@ class ContactsStickySliver extends StatelessWidget {
     required this.scrollController,
     required this.item,
     this.withFavorites = false,
+    this.withHeaders = true,
   }) : super(key: key);
 
   final int? index;
   final ContactListItemModel item;
   final ScrollController scrollController;
   final bool withFavorites;
+  final bool withHeaders;
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +33,10 @@ class ContactsStickySliver extends StatelessWidget {
 
     return SliverStickyHeader(
       overlapsContent: true,
-      header: _SideHeader(
-          index: index, letter: item.letter ?? '', favorite: item.favorite),
+      header: (withHeaders)
+          ? _SideHeader(
+              index: index, letter: item.letter ?? '', favorite: item.favorite)
+          : const SizedBox(),
       sliver: SliverPadding(
           padding: const EdgeInsets.only(left: 60),
           sliver: SliverToBoxAdapter(

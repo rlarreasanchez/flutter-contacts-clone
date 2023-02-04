@@ -19,14 +19,12 @@ class SingleGridItem extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Expanded(
               child: imgUrl.isEmpty
                   ? CircleAvatar(
                       backgroundColor: color,
-                      minRadius: 35,
+                      minRadius: 24,
                       child: Text(
                         title[0].toUpperCase(),
                         style:
@@ -35,7 +33,7 @@ class SingleGridItem extends StatelessWidget {
                     )
                   : CircleAvatar(
                       backgroundImage: NetworkImage(imgUrl),
-                      minRadius: 35,
+                      minRadius: 24,
                       backgroundColor: Colors.transparent,
                     ),
             ),
@@ -43,8 +41,12 @@ class SingleGridItem extends StatelessWidget {
               title,
               maxLines: 2,
               textAlign: TextAlign.center,
+              softWrap: true,
+              overflow: TextOverflow.fade,
               style: const TextStyle(
-                  color: Colors.black87, fontWeight: FontWeight.w500),
+                  color: Colors.black87,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 12),
             ),
           ],
         ),

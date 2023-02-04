@@ -265,7 +265,7 @@ class CustomScrollbarBubble extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: heightScrollThumb,
-      width: dragInProcess ? 100.0 : 30,
+      width: dragInProcess ? 100.0 : 40,
       color: Colors.transparent,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
