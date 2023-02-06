@@ -1,8 +1,6 @@
-import 'package:contactos_app/features/favorites/screens/select_favorites_screen.dart';
-import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
+import 'package:contactos_app/features/favorites/screens/select_favorites_screen.dart';
 import 'package:contactos_app/features/contact/models/contact_model.dart';
-import 'package:contactos_app/features/contacts/data/contacts_fake.dart';
 import 'package:contactos_app/features/contacts/widgets/contacts_widgets.dart';
 import 'package:contactos_app/features/favorites/widgets/favorites_widgets.dart';
 
@@ -11,7 +9,7 @@ class FavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<ContactItem> getFavorites(List<Contact> contactos) {
+    List<ContactItem> getFavorites(List<ContactModel> contactos) {
       return contactos
           // .where((contacto) => contacto.favorite ?? false)
           .map((c) => ContactItem(

@@ -1,11 +1,10 @@
 import 'dart:developer';
 
+import 'package:contactos_app/features/contact/models/contact_model.dart';
 import 'package:flutter/material.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-// El estado de nuestro StateNotifier debe ser inmutable.
-// También podríamos usar paquetes como Freezed para ayudar con la implementación.
 @immutable
 class ContactsState {
   const ContactsState(
@@ -13,15 +12,12 @@ class ContactsState {
       required this.loading,
       required this.contacts});
 
-  // Todas las propiedades deben ser `final` en nuestra clase.
-  final List<Contact> contacts;
+  final List<ContactModel> contacts;
   final String errorMessage;
   final bool loading;
 
-  // Como `Todo` es inmutable, implementamos un método que permite clonar el
-  // `Todo` con un contenido ligeramente diferente.
   ContactsState copyWith(
-      {List<Contact>? contacts, String? error, bool? loading}) {
+      {List<ContactModel>? contacts, String? error, bool? loading}) {
     return ContactsState(
       contacts: contacts ?? this.contacts,
       errorMessage: error ?? errorMessage,
@@ -31,7 +27,6 @@ class ContactsState {
 }
 
 class ContactsNotifier extends StateNotifier<ContactsState> {
-  // Inicializamos la lista de `contactos` como una lista vacía
   ContactsNotifier()
       : super(const ContactsState(
             errorMessage: '', loading: false, contacts: []));
@@ -39,10 +34,14 @@ class ContactsNotifier extends StateNotifier<ContactsState> {
   void getContacts() async {
     state = state.copyWith(loading: true);
     try {
-      final List<Contact> contacts =
-          await ContactsService.getContacts(withThumbnails: false);
+      final List<Contact> contacts = await ContactsService.getContacts(
+          withThumbnails: false, photoHighResolution: false);
 
-      state = state.copyWith(contacts: contacts, loading: false, error: '');
+      final List<ContactModel> contactsModel =
+          contacts.map((contact) => ContactModel.fromMap(contact)).toList();
+
+      state =
+          state.copyWith(contacts: contactsModel, loading: false, error: '');
     } catch (e) {
       inspect(e);
       state = state.copyWith(
@@ -53,8 +52,6 @@ class ContactsNotifier extends StateNotifier<ContactsState> {
   }
 }
 
-// Finalmente, estamos usando StateNotifierProvider para permitir que la
-// interfaz de usuario interactúe con nuestra clase ContactsNotifier.
 final contactsProvider =
     StateNotifierProvider<ContactsNotifier, ContactsState>((ref) {
   return ContactsNotifier();

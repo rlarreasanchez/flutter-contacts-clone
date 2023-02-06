@@ -1,8 +1,8 @@
-import 'package:animate_do/animate_do.dart';
-import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
-import 'package:contactos_app/features/contacts/models/contact_listItem_model.dart';
+import 'package:contactos_app/features/contact/models/contact_model.dart';
+import 'package:contactos_app/features/contacts/models/contact_list_item_model.dart';
 import 'package:contactos_app/features/contacts/widgets/contacts_widgets.dart';
 
 class ContactsStickySliver extends StatelessWidget {
@@ -23,7 +23,7 @@ class ContactsStickySliver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> generateContactList(List<Contact> contactos) {
+    List<Widget> generateContactList(List<ContactModel> contactos) {
       return contactos
           .map((contacto) => FadeIn(
                 child: ContactItem(

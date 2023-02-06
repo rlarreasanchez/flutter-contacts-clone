@@ -44,7 +44,7 @@ class ContactScreen extends ConsumerWidget {
               physics: const BouncingScrollPhysics(),
               controller: _controller,
               slivers: [
-                const ContactInfoHeader(),
+                ContactInfoHeader(contact: contactRef!),
                 SliverStickyHeader(
                     header: const CallActionsButtons(),
                     sliver: const ContactInfo()),

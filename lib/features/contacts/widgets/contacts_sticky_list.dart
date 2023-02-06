@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:contacts_service/contacts_service.dart';
 import 'package:contactos_app/features/contacts/provider/contacts_provider.dart';
 import 'package:contactos_app/features/contacts/utils/contacts_utils.dart';
-import 'package:contactos_app/features/contacts/models/contact_listItem_model.dart';
+import 'package:contactos_app/features/contact/models/contact_model.dart';
+import 'package:contactos_app/features/contacts/models/contact_list_item_model.dart';
 import 'package:contactos_app/features/contacts/widgets/contacts_widgets.dart';
 
 class ContactsStickyList extends ConsumerWidget {
@@ -14,7 +14,7 @@ class ContactsStickyList extends ConsumerWidget {
   }) : super(key: key);
 
   List<ContactsStickySliver> generateContactsSlivers(
-      List<Contact> contactos, ScrollController controller) {
+      List<ContactModel> contactos, ScrollController controller) {
     final List<ContactListItemModel> contactosList =
         ContactsUtils.getContactsStickyList(contactos);
 
@@ -32,7 +32,7 @@ class ContactsStickyList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final contactsStateRef = ref.watch(contactsProvider);
 
-    if (contactsStateRef.loading) {
+    if (contactsStateRef.loading && contactsStateRef.contacts.isEmpty) {
       return Center(
         child: CircularProgressIndicator(
           color: Theme.of(context).primaryColor,
@@ -50,13 +50,16 @@ class ContactsStickyList extends ConsumerWidget {
       controller: _controller,
       contactsModels:
           ContactsUtils.getContactsStickyList(contactsStateRef.contacts),
-      child: CustomScrollView(
-        controller: _controller,
-        slivers: [
-          _ContactsListHeader(
-              title: 'Contactos', nContacts: contactsStateRef.contacts.length),
-          ...generateContactsSlivers(contactsStateRef.contacts, _controller)
-        ],
+      child: _RefreshContactsIndicator(
+        child: CustomScrollView(
+          controller: _controller,
+          slivers: [
+            _ContactsListHeader(
+                title: 'Contactos',
+                nContacts: contactsStateRef.contacts.length),
+            ...generateContactsSlivers(contactsStateRef.contacts, _controller)
+          ],
+        ),
       ),
     );
   }
@@ -106,6 +109,25 @@ class _ContactsListHeader extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _RefreshContactsIndicator extends ConsumerWidget {
+  final Widget child;
+
+  const _RefreshContactsIndicator({
+    required this.child,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return RefreshIndicator(
+      onRefresh: () async {
+        return ref.read(contactsProvider.notifier).getContacts();
+      },
+      child: child,
     );
   }
 }

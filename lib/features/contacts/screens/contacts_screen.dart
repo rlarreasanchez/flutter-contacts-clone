@@ -8,10 +8,14 @@ class ContactsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(
+          centerTitle: false,
+          title: const ContactsSearchBar(),
+          automaticallyImplyLeading: false,
+          toolbarHeight: 70,
+        ),
         backgroundColor: Colors.white,
         body: Column(children: [
-          // Buscador
-          const ContactsSearchBar(),
           const SizedBox(
             height: 5,
           ),
@@ -22,7 +26,7 @@ class ContactsScreen extends StatelessWidget {
           const SizedBox(
             height: 5,
           ),
-          Expanded(child: ContactsStickyList())
+          Expanded(child: ContactsStickyList()),
         ]),
       ),
     );

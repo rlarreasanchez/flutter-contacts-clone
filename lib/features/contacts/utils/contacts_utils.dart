@@ -1,13 +1,13 @@
-import 'package:contactos_app/constants/ui_constants.dart';
-import 'package:contactos_app/features/contacts/models/contact_listItem_model.dart';
-import 'package:contactos_app/shared/utils/utils.dart';
-import 'package:contacts_service/contacts_service.dart';
-import 'package:diacritic/diacritic.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/animation.dart';
+import 'package:diacritic/diacritic.dart';
+import 'package:contactos_app/constants/ui_constants.dart';
+import 'package:contactos_app/features/contact/models/contact_model.dart';
+import 'package:contactos_app/features/contacts/models/contact_list_item_model.dart';
 
 class ContactsUtils {
   static List<ContactListItemModel> getContactsStickyList(
-      List<Contact> contactos,
+      List<ContactModel> contactos,
       [bool withFavorites = true]) {
     List<String> headers = [
       ...contactos
@@ -111,9 +111,21 @@ class ContactsUtils {
     return contacto.letter;
   }
 
-  static Color getColor() {
+  static Color getColor(String seed) {
     final int nColors = UiConstants.contactsColors.length;
+    final int seedInt = int.parse(seed);
+    final int scale =
+        (nColors * ((seedInt / nColors) - (seedInt / nColors).floor())).floor();
 
-    return UiConstants.contactsColors[Utils.getRandomInt(0, nColors)];
+    return UiConstants.contactsColors[scale];
+  }
+
+  static Future<void> launchContactUrl(String urlEncoded) async {
+    var url = Uri.parse(urlEncoded);
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

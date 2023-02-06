@@ -9,21 +9,18 @@ class ContactsSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
-      child: SearchBar(
-          onTap: () {
-            Navigator.of(context).push(
-              PageRouteBuilder(
-                pageBuilder: (BuildContext context, Animation<double> animation,
-                    Animation<double> secondaryAnimation) {
-                  return const SearchScreen();
-                },
-              ),
-            );
-          },
-          startIcon: Icons.menu,
-          hintText: 'Buscar contactos'),
-    );
+    return SearchBar(
+        onTap: () {
+          Navigator.of(context).push(
+            PageRouteBuilder(
+              pageBuilder: (BuildContext context, Animation<double> animation,
+                  Animation<double> secondaryAnimation) {
+                return const SearchScreen();
+              },
+            ),
+          );
+        },
+        startIcon: Icons.menu,
+        hintText: 'Buscar contactos');
   }
 }

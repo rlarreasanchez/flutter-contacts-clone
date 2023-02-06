@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:contactos_app/features/favorites/screens/select_favorites_screen.dart';
-import 'package:contacts_service/contacts_service.dart';
 import 'package:contactos_app/features/contacts/utils/contacts_utils.dart';
 import 'package:contactos_app/features/contact/models/contact_model.dart';
-import 'package:contactos_app/features/contacts/models/contact_listItem_model.dart';
+import 'package:contactos_app/features/contacts/models/contact_list_item_model.dart';
 import 'package:contactos_app/features/contacts/widgets/contacts_widgets.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SelectFavoritesStickyList extends ConsumerWidget {
   final ScrollController _controller = ScrollController();
@@ -15,7 +14,7 @@ class SelectFavoritesStickyList extends ConsumerWidget {
   }) : super(key: key);
 
   List<ContactsStickySliver> generateContactsSlivers(
-      List<Contact> contactos, ScrollController controller,
+      List<ContactModel> contactos, ScrollController controller,
       [bool withHeaders = true]) {
     final List<ContactListItemModel> contactosList =
         ContactsUtils.getContactsStickyList(contactos, false);

@@ -1,14 +1,15 @@
-import 'package:contactos_app/constants/ui_constants.dart';
-import 'package:contactos_app/features/contacts/utils/contacts_utils.dart';
-import 'package:contactos_app/shared/utils/utils.dart';
-import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:contactos_app/main.dart';
+import 'package:contactos_app/shared/utils/utils.dart';
+import 'package:contactos_app/features/contact/models/contact_model.dart';
+import 'package:contactos_app/features/contacts/utils/contacts_utils.dart';
 import 'package:contactos_app/features/contacts/widgets/contacts_widgets.dart';
 
 class ContactItem extends ConsumerWidget {
-  final Contact contact;
+  final ContactModel contact;
   final String? highlightText;
   final bool highlight;
   final bool withFavIcon;
@@ -65,25 +66,11 @@ class ContactItem extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
-                padding: const EdgeInsets.symmetric(vertical: 7),
-                child: contact.avatar != null && contact.avatar!.isNotEmpty
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(25.0),
-                        child: Image.memory(
-                          contact.avatar!,
-                          width: 40,
-                          height: 40,
-                        ),
-                      )
-                    : CircleAvatar(
-                        backgroundColor: ContactsUtils.getColor(),
-                        radius: 20,
-                        child: Text(
-                          contact.displayName![0].toUpperCase(),
-                          style: const TextStyle(
-                              fontSize: 18, color: Colors.white),
-                        ),
-                      )),
+              padding: const EdgeInsets.symmetric(vertical: 7),
+              child: _ContactAvatarItem(
+                contact: contact,
+              ),
+            ),
             Expanded(
               child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -139,5 +126,52 @@ class ContactItem extends ConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+class _ContactAvatarItem extends StatefulWidget {
+  final ContactModel contact;
+  const _ContactAvatarItem({required this.contact});
+
+  @override
+  State<_ContactAvatarItem> createState() => __ContactAvatarItemState();
+}
+
+class __ContactAvatarItemState extends State<_ContactAvatarItem> {
+  Uint8List? avatar;
+
+  Future<void> getAvatar() async {
+    final avatarResponse = await ContactsService.getAvatar(widget.contact);
+    setState(() {
+      avatar = avatarResponse;
+    });
+  }
+
+  @override
+  void initState() {
+    getAvatar();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return avatar != null
+        ? ClipRRect(
+            borderRadius: BorderRadius.circular(25.0),
+            child: Image.memory(
+              avatar!,
+              width: 40,
+              height: 40,
+            ),
+          )
+        : CircleAvatar(
+            backgroundColor:
+                ContactsUtils.getColor(widget.contact.identifier ?? '0'),
+            radius: 20,
+            child: Text(
+              widget.contact.displayName![0].toUpperCase(),
+              style: const TextStyle(fontSize: 18, color: Colors.white),
+            ),
+          );
   }
 }

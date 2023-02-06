@@ -1,12 +1,12 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:contactos_app/features/contact/models/contact_model.dart';
 import 'package:contactos_app/features/contacts/provider/contacts_provider.dart';
 import 'package:contactos_app/features/contacts/widgets/contact_item.dart';
 import 'package:contactos_app/shared/utils/utils.dart';
-import 'package:contacts_service/contacts_service.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final searchTermProvider = StateProvider.autoDispose((ref) => '');
 
@@ -18,7 +18,7 @@ class SearchScreen extends ConsumerWidget {
     final searchTerm = ref.watch(searchTermProvider);
     final contactsState = ref.watch(contactsProvider);
 
-    List<Widget> filterContactList(List<Contact> contactos) {
+    List<Widget> filterContactList(List<ContactModel> contactos) {
       // TODO: Si no hay searchTerm debe de devolver historial del storage
       if (searchTerm.isEmpty) return [];
       return contactos

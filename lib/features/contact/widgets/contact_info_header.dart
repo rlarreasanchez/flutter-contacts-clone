@@ -1,50 +1,65 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:contactos_app/main.dart';
+import 'package:contactos_app/features/contact/models/contact_model.dart';
 import 'package:contactos_app/features/contacts/utils/contacts_utils.dart';
+import 'package:contactos_app/main.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:contactos_app/constants/ui_constants.dart';
+import 'package:contacts_service/contacts_service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:contactos_app/features/contacts/utils/contacts_utils.dart';
 
-class ContactInfoHeader extends ConsumerWidget {
+class ContactInfoHeader extends StatefulWidget {
+  final ContactModel contact;
   const ContactInfoHeader({
+    required this.contact,
     Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final contactRef = ref.watch(contactProvider);
+  State<ContactInfoHeader> createState() => _ContactInfoHeaderState();
+}
 
+class _ContactInfoHeaderState extends State<ContactInfoHeader> {
+  Uint8List? avatar;
+  bool isLoading = true;
+
+  Future<void> getAvatar() async {
+    setState(() {
+      isLoading = true;
+    });
+    final avatarResponse = await ContactsService.getAvatar(widget.contact);
+    setState(() {
+      avatar = avatarResponse;
+      isLoading = false;
+    });
+  }
+
+  @override
+  void initState() {
+    getAvatar();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Container(
         decoration: const BoxDecoration(
             border:
                 Border(bottom: BorderSide(width: 1, color: Colors.black12))),
-        height: contactRef != null &&
-                contactRef.avatar != null &&
-                contactRef.avatar!.isNotEmpty
+        height: avatar != null && !isLoading
             ? UiConstants.contactHeaderLarge
             : UiConstants.contactHeaderSmall,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Expanded(
-                child:
-                    contactRef!.avatar != null && contactRef.avatar!.isNotEmpty
-                        ? Image.memory(
-                            contactRef.avatar!,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                            alignment: Alignment.center,
-                          )
-                        : CircleAvatar(
-                            backgroundColor: ContactsUtils.getColor(),
-                            maxRadius: 45,
-                            child: Text(
-                              contactRef.displayName![0].toUpperCase(),
-                              style: const TextStyle(
-                                  fontSize: 45, color: Colors.white),
-                            ),
-                          )),
+              child: _ContactAvatar(
+                  id: widget.contact.identifier ?? '0',
+                  avatar: avatar,
+                  isLoading: isLoading,
+                  letter: widget.contact.displayName![0].toUpperCase()),
+            ),
             SizedBox(
               height: 70,
               child: Padding(
@@ -52,7 +67,8 @@ class ContactInfoHeader extends ConsumerWidget {
                 child: Align(
                   alignment: Alignment.center,
                   child: Text(
-                    (contactRef.displayName ?? '').replaceAll(' ', '\u{000A0}'),
+                    (widget.contact.displayName ?? '')
+                        .replaceAll(' ', '\u{000A0}'),
                     style: const TextStyle(color: Colors.black87, fontSize: 26),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -64,5 +80,48 @@ class ContactInfoHeader extends ConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+class _ContactAvatar extends ConsumerWidget {
+  final Uint8List? avatar;
+  final bool isLoading;
+  final String letter;
+  final String id;
+
+  const _ContactAvatar(
+      {required this.id,
+      this.avatar,
+      required this.isLoading,
+      required this.letter});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (avatar != null) {
+      ref.read(contactProvider.notifier).state!.avatar = avatar;
+    }
+
+    if (isLoading) {
+      return Center(
+        child: CircularProgressIndicator(color: Theme.of(context).primaryColor),
+      );
+    }
+
+    return avatar != null
+        ? Image.memory(
+            avatar!,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+            alignment: Alignment.center,
+          )
+        : CircleAvatar(
+            backgroundColor: ContactsUtils.getColor(id),
+            maxRadius: 45,
+            child: Text(
+              letter,
+              style: const TextStyle(fontSize: 45, color: Colors.white),
+            ),
+          );
   }
 }
