@@ -29,10 +29,11 @@ class ContactInfo extends ConsumerWidget {
                       const SizedBox(
                         height: 20,
                       ),
-                      if (contactRef!.email.isNotEmpty)
+                      if (contactRef!.emails != null &&
+                          contactRef.emails!.isNotEmpty)
                         ContactInfoRow(
                             headerIcon: Icons.mail_outline,
-                            title: contactRef.email)
+                            title: contactRef.emails![0].value!)
                     ]),
                 const SizedBox(
                   height: 20,

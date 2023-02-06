@@ -18,9 +18,11 @@ class ContactScreen extends ConsumerWidget {
 
     bool checkShowAppbarTitle(ScrollNotification notification) {
       if (notification is ScrollUpdateNotification) {
-        final limitHeight = (contactRef != null && contactRef.imgUrl.isEmpty)
-            ? UiConstants.contactHeaderSmall
-            : UiConstants.contactHeaderLarge;
+        final limitHeight = (contactRef != null &&
+                contactRef.avatar != null &&
+                contactRef.avatar!.isNotEmpty)
+            ? UiConstants.contactHeaderLarge
+            : UiConstants.contactHeaderSmall;
 
         if (_controller.position.pixels > limitHeight - 20) {
           ref.read(showAppbarTitle.notifier).state = true;

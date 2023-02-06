@@ -1,7 +1,7 @@
-import 'package:contactos_app/features/favorites/screens/select_favorites_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:contactos_app/features/favorites/screens/select_favorites_screen.dart';
+import 'package:contacts_service/contacts_service.dart';
 import 'package:contactos_app/features/contacts/utils/contacts_utils.dart';
-import 'package:contactos_app/features/contacts/data/contacts_fake.dart';
 import 'package:contactos_app/features/contact/models/contact_model.dart';
 import 'package:contactos_app/features/contacts/models/contact_listItem_model.dart';
 import 'package:contactos_app/features/contacts/widgets/contacts_widgets.dart';
@@ -15,7 +15,7 @@ class SelectFavoritesStickyList extends ConsumerWidget {
   }) : super(key: key);
 
   List<ContactsStickySliver> generateContactsSlivers(
-      List<ContactModel> contactos, ScrollController controller,
+      List<Contact> contactos, ScrollController controller,
       [bool withHeaders = true]) {
     final List<ContactListItemModel> contactosList =
         ContactsUtils.getContactsStickyList(contactos, false);
@@ -47,24 +47,25 @@ class SelectFavoritesStickyList extends ConsumerWidget {
           .toList();
     }
 
-    return isSearching && searchTerm.isNotEmpty
-        ? CustomScrollView(
-            controller: _controller,
-            slivers: [
-              ...generateContactsSlivers(
-                  filterContactList(contactsFake), _controller, false)
-            ],
-          )
-        : DraggableScrollbar(
-            heightScrollThumb: 70.0,
-            offsetHeight: 0,
-            controller: _controller,
-            contactsModels:
-                ContactsUtils.getContactsStickyList(contactsFake, false),
-            child: CustomScrollView(
-              controller: _controller,
-              slivers: [...generateContactsSlivers(contactsFake, _controller)],
-            ),
-          );
+    // return isSearching && searchTerm.isNotEmpty
+    //     ? CustomScrollView(
+    //         controller: _controller,
+    //         slivers: [
+    //           ...generateContactsSlivers(
+    //               filterContactList(contactsFake), _controller, false)
+    //         ],
+    //       )
+    //     : DraggableScrollbar(
+    //         heightScrollThumb: 70.0,
+    //         offsetHeight: 0,
+    //         controller: _controller,
+    //         contactsModels:
+    //             ContactsUtils.getContactsStickyList(contactsFake, false),
+    //         child: CustomScrollView(
+    //           controller: _controller,
+    //           slivers: [...generateContactsSlivers(contactsFake, _controller)],
+    //         ),
+    //       );
+    return Container();
   }
 }

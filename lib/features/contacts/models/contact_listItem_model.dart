@@ -1,9 +1,10 @@
 import 'package:contactos_app/features/contact/models/contact_model.dart';
+import 'package:contacts_service/contacts_service.dart';
 
 class ContactListItemModel {
   final String? letter;
   final bool favorite;
-  final List<ContactModel> contacts;
+  final List<Contact> contacts;
 
   ContactListItemModel({
     this.letter,

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:contacts_service/contacts_service.dart';
+import 'package:contactos_app/features/contacts/provider/contacts_provider.dart';
 import 'package:contactos_app/features/contacts/utils/contacts_utils.dart';
-import 'package:contactos_app/features/contacts/data/contacts_fake.dart';
-import 'package:contactos_app/features/contact/models/contact_model.dart';
 import 'package:contactos_app/features/contacts/models/contact_listItem_model.dart';
 import 'package:contactos_app/features/contacts/widgets/contacts_widgets.dart';
 
-class ContactsStickyList extends StatelessWidget {
+class ContactsStickyList extends ConsumerWidget {
   final ScrollController _controller = ScrollController();
 
   ContactsStickyList({
@@ -13,7 +14,7 @@ class ContactsStickyList extends StatelessWidget {
   }) : super(key: key);
 
   List<ContactsStickySliver> generateContactsSlivers(
-      List<ContactModel> contactos, ScrollController controller) {
+      List<Contact> contactos, ScrollController controller) {
     final List<ContactListItemModel> contactosList =
         ContactsUtils.getContactsStickyList(contactos);
 
@@ -28,18 +29,33 @@ class ContactsStickyList extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final contactsStateRef = ref.watch(contactsProvider);
+
+    if (contactsStateRef.loading) {
+      return Center(
+        child: CircularProgressIndicator(
+          color: Theme.of(context).primaryColor,
+        ),
+      );
+    }
+
+    if (contactsStateRef.errorMessage.isNotEmpty) {
+      return Center(child: Text(contactsStateRef.errorMessage));
+    }
+
     return DraggableScrollbar(
       heightScrollThumb: 70.0,
       offsetHeight: 20,
       controller: _controller,
-      contactsModels: ContactsUtils.getContactsStickyList(contactsFake),
+      contactsModels:
+          ContactsUtils.getContactsStickyList(contactsStateRef.contacts),
       child: CustomScrollView(
         controller: _controller,
         slivers: [
-          const _ContactsListHeader(
-              mail: 'rlarreasanchez@gmail.com', nContacts: 175),
-          ...generateContactsSlivers(contactsFake, _controller)
+          _ContactsListHeader(
+              title: 'Contactos', nContacts: contactsStateRef.contacts.length),
+          ...generateContactsSlivers(contactsStateRef.contacts, _controller)
         ],
       ),
     );
@@ -47,12 +63,12 @@ class ContactsStickyList extends StatelessWidget {
 }
 
 class _ContactsListHeader extends StatelessWidget {
-  final String mail;
+  final String title;
   final int nContacts;
 
   const _ContactsListHeader({
     Key? key,
-    required this.mail,
+    required this.title,
     required this.nContacts,
   }) : super(key: key);
 
@@ -77,7 +93,7 @@ class _ContactsListHeader extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                '$mail · $nContacts contactos',
+                '$title · $nContacts contactos',
                 style: const TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,

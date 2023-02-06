@@ -1,4 +1,5 @@
 import 'package:contactos_app/features/favorites/screens/select_favorites_screen.dart';
+import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:contactos_app/features/contact/models/contact_model.dart';
 import 'package:contactos_app/features/contacts/data/contacts_fake.dart';
@@ -10,16 +11,16 @@ class FavoritesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<ContactItem> getFavorites(List<ContactModel> contactos) {
+    List<ContactItem> getFavorites(List<Contact> contactos) {
       return contactos
-          .where((contacto) => contacto.favorite ?? false)
+          // .where((contacto) => contacto.favorite ?? false)
           .map((c) => ContactItem(
                 contact: c,
               ))
           .toList();
     }
 
-    List<ContactItem> favorites = getFavorites(contactsFake);
+    // List<ContactItem> favorites = getFavorites(contactsFake);
 
     return SafeArea(
       child: Scaffold(
@@ -30,7 +31,7 @@ class FavoritesScreen extends StatelessWidget {
             // Buscador
             const FavoritesSearchBar(),
             const SizedBox(
-              height: 10,
+              height: 5,
             ),
             Expanded(
                 child: CustomScrollView(slivers: <Widget>[
@@ -38,10 +39,10 @@ class FavoritesScreen extends StatelessWidget {
                   delegate: SliverChildListDelegate(
                 [
                   const _FavoritesTitleAction(),
-                  if (favorites.isEmpty) const FavoritesEmptyContainer(),
+                  // if (favorites.isEmpty) const FavoritesEmptyContainer(),
                 ],
               )),
-              FavoritesGrid(contacts: favorites),
+              // FavoritesGrid(contacts: favorites),
               SliverList(
                   delegate: SliverChildListDelegate([
                 const SizedBox(
@@ -117,7 +118,7 @@ class _RecientesTitleAction extends StatelessWidget {
         Text(
           'Recientes',
           style: TextStyle(
-              fontSize: 18, fontWeight: FontWeight.w500, color: Colors.black87),
+              fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black87),
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 8.0),

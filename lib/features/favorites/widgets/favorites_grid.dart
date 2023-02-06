@@ -20,10 +20,12 @@ class FavoritesGrid extends ConsumerWidget {
         delegate: SliverChildListDelegate(
           [
             ...contacts.map((contact) => SingleGridItem(
-                  imgUrl: contact.contact.imgUrl,
-                  title: contact.contact.name,
+                  // imgUrl: contact.contact.imgUrl,
+                  imgUrl: '',
+                  title: contact.contact.displayName ?? '',
                   color:
-                      contact.contact.color ?? Theme.of(context).primaryColor,
+                      // contact.contact.color ?? Theme.of(context).primaryColor,
+                      Theme.of(context).primaryColor,
                   onTap: () {
                     Future.delayed(const Duration(milliseconds: 150), () {
                       ref.read(contactProvider.notifier).state =

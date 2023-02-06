@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:animate_do/animate_do.dart';
-import 'package:contactos_app/features/contacts/data/contacts_fake.dart';
-import 'package:contactos_app/features/contact/models/contact_model.dart';
+import 'package:contactos_app/features/contacts/provider/contacts_provider.dart';
 import 'package:contactos_app/features/contacts/widgets/contact_item.dart';
+import 'package:contactos_app/shared/utils/utils.dart';
+import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,14 +16,18 @@ class SearchScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchTerm = ref.watch(searchTermProvider);
+    final contactsState = ref.watch(contactsProvider);
 
-    List<Widget> filterContactList(List<ContactModel> contactos) {
+    List<Widget> filterContactList(List<Contact> contactos) {
       // TODO: Si no hay searchTerm debe de devolver historial del storage
       if (searchTerm.isEmpty) return [];
       return contactos
           .where((contacto) =>
-              contacto.containsTermByName(searchTerm) ||
-              contacto.containsTermByEmail(searchTerm))
+              Utils.containsStringTerm(
+                  contacto.displayName ?? '', searchTerm) ||
+              Utils.containsListTerm(
+                  contacto.emails!.map((email) => email.value ?? '').toList(),
+                  searchTerm))
           .map((c) => FadeIn(
                 child: ContactItem(
                   contact: c,
@@ -48,7 +53,7 @@ class SearchScreen extends ConsumerWidget {
                         horizontal: 20, vertical: 10),
                     sliver: SliverToBoxAdapter(
                         child: Column(
-                      children: [...filterContactList(contactsFake)],
+                      children: [...filterContactList(contactsState.contacts)],
                     )),
                   )
                 ],

@@ -37,7 +37,7 @@ class ContactAppBar extends ConsumerWidget implements PreferredSizeWidget {
           width: 20,
         ),
       ],
-      title: _ContactAppBarTitle(title: contactRef!.name),
+      title: _ContactAppBarTitle(title: contactRef!.displayName ?? ''),
     );
   }
 }

@@ -1,34 +1,63 @@
+import 'package:contactos_app/constants/ui_constants.dart';
 import 'package:contactos_app/features/contacts/models/contact_listItem_model.dart';
-import 'package:contactos_app/features/contact/models/contact_model.dart';
+import 'package:contactos_app/shared/utils/utils.dart';
+import 'package:contacts_service/contacts_service.dart';
+import 'package:diacritic/diacritic.dart';
+import 'package:flutter/animation.dart';
 
 class ContactsUtils {
   static List<ContactListItemModel> getContactsStickyList(
-      List<ContactModel> contactos,
+      List<Contact> contactos,
       [bool withFavorites = true]) {
     List<String> headers = [
-      ...contactos.map((contacto) => contacto.name[0]).toSet().toList()..sort()
+      ...contactos
+          .map((contacto) {
+            if (contacto.displayName != null &&
+                contacto.displayName!.isNotEmpty) {
+              if (contacto.displayName![0] == '+') {
+                return '#';
+              }
+              return removeDiacritics(contacto.displayName![0].toUpperCase());
+            }
+
+            return '#';
+          })
+          .toSet()
+          .toList()
+        ..sort()
     ];
 
     List<ContactListItemModel> contactsStickyList = headers
         .map((header) => ContactListItemModel(
             letter: header,
-            contacts: contactos
-                .where((contacto) => header == contacto.name[0])
-                .toList()
-              ..sort((a, b) => a.name.compareTo(b.name))))
+            contacts: contactos.where((contacto) {
+              if (contacto.displayName != null &&
+                  contacto.displayName!.isNotEmpty) {
+                if (header == '#') {
+                  return contacto.displayName![0] == '+';
+                }
+                return header ==
+                    removeDiacritics(contacto.displayName![0].toUpperCase());
+              }
+
+              return false;
+            }).toList()))
         .toList();
 
-    if (!withFavorites) {
-      return contactsStickyList;
-    }
+    //TODO: Obtener contactos favoritos
+    return contactsStickyList;
 
-    List<ContactModel> favContacts =
-        contactos.where((c) => c.favorite ?? false).toList();
+    // if (!withFavorites) {
+    //   return contactsStickyList;
+    // }
 
-    final ContactListItemModel favoritesItem =
-        ContactListItemModel(contacts: favContacts, favorite: true);
+    // List<Contact> favContacts =
+    //     contactos.where((c) => c. ?? false).toList();
 
-    return [favoritesItem, ...contactsStickyList];
+    // final ContactListItemModel favoritesItem =
+    //     ContactListItemModel(contacts: favContacts, favorite: true);
+
+    // return [favoritesItem, ...contactsStickyList];
   }
 
   static List<ContactListScrollModel> getScrollModelContacts(
@@ -80,5 +109,11 @@ class ContactsUtils {
             contacto.startPosition <= viewOffset &&
             contacto.endPosition > viewOffset);
     return contacto.letter;
+  }
+
+  static Color getColor() {
+    final int nColors = UiConstants.contactsColors.length;
+
+    return UiConstants.contactsColors[Utils.getRandomInt(0, nColors)];
   }
 }

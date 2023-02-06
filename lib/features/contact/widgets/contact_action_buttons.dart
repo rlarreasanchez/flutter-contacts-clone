@@ -81,7 +81,7 @@ class CallActionsButtons extends ConsumerWidget {
             )
           ],
         ),
-        if (contactoRef.email.isNotEmpty)
+        if (contactoRef.emails != null && contactoRef.emails!.isNotEmpty)
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [

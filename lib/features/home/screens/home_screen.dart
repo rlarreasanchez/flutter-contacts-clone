@@ -1,18 +1,21 @@
+import 'package:contactos_app/features/contacts/provider/contacts_provider.dart';
+import 'package:flutter/material.dart';
 import 'package:contactos_app/features/config/screens/config_screen.dart';
 import 'package:contactos_app/features/contacts/screens/contacts_screen.dart';
 import 'package:contactos_app/features/favorites/screens/favorites_screen.dart';
 import 'package:contactos_app/features/home/widgets/animated_button.dart';
 import 'package:contactos_app/features/home/models/tab_item_model.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  HomeScreenState createState() => HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class HomeScreenState extends ConsumerState<HomeScreen> {
   int _selectedIndex = 0;
 
   static final List<TabItemModel> _items = [
@@ -56,6 +59,45 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _askPermissions();
+  }
+
+  Future<void> _askPermissions() async {
+    PermissionStatus permissionStatus = await _getContactPermission();
+    if (permissionStatus != PermissionStatus.granted) {
+      _handleInvalidPermissions(permissionStatus);
+    } else {
+      ref.read(contactsProvider.notifier).getContacts();
+    }
+  }
+
+  Future<PermissionStatus> _getContactPermission() async {
+    PermissionStatus permission = await Permission.contacts.status;
+    if (permission != PermissionStatus.granted &&
+        permission != PermissionStatus.permanentlyDenied) {
+      PermissionStatus permissionStatus = await Permission.contacts.request();
+      return permissionStatus;
+    } else {
+      return permission;
+    }
+  }
+
+  void _handleInvalidPermissions(PermissionStatus permissionStatus) {
+    if (permissionStatus == PermissionStatus.denied) {
+      const snackBar =
+          SnackBar(content: Text('Acceso a los Contactos denegado'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    } else if (permissionStatus == PermissionStatus.permanentlyDenied) {
+      const snackBar = SnackBar(
+          content:
+              Text('Los Contactos no están habilitados en el dispositivo'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
   }
 
   @override
