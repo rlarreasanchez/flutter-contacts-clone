@@ -69,8 +69,10 @@ class _SearchingAppBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AppBar(
-      title: const _SearchInput(),
+      surfaceTintColor: Colors.grey[300],
       backgroundColor: Colors.grey[300],
+      elevation: 0.0,
+      title: const _SearchInput(),
       leading: IconButton(
         icon: const Icon(Icons.arrow_back, color: Colors.black),
         onPressed: () {

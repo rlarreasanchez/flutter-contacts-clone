@@ -9,6 +9,9 @@ class ContactsScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          surfaceTintColor: Colors.white,
+          backgroundColor: Colors.white,
+          elevation: 0.0,
           centerTitle: false,
           title: const ContactsSearchBar(),
           automaticallyImplyLeading: false,

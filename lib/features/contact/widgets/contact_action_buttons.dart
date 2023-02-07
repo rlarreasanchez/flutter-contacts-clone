@@ -1,4 +1,4 @@
-import 'package:contactos_app/main.dart';
+import 'package:contactos_app/features/contact/providers/contact_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

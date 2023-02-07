@@ -41,23 +41,23 @@ class ContactsUtils {
               }
 
               return false;
-            }).toList()))
+            }).toList()
+              ..sort((a, b) => a.displayName!.compareTo(b.displayName!))))
         .toList();
 
-    //TODO: Obtener contactos favoritos
-    return contactsStickyList;
+    if (!withFavorites) {
+      return contactsStickyList;
+    }
 
-    // if (!withFavorites) {
-    //   return contactsStickyList;
-    // }
+    List<ContactModel> favContacts = contactos
+        .where((c) => c.isFavorite)
+        .toList()
+      ..sort((a, b) => a.displayName!.compareTo(b.displayName!));
 
-    // List<Contact> favContacts =
-    //     contactos.where((c) => c. ?? false).toList();
+    final ContactListItemModel favoritesItem =
+        ContactListItemModel(contacts: favContacts, favorite: true);
 
-    // final ContactListItemModel favoritesItem =
-    //     ContactListItemModel(contacts: favContacts, favorite: true);
-
-    // return [favoritesItem, ...contactsStickyList];
+    return [favoritesItem, ...contactsStickyList];
   }
 
   static List<ContactListScrollModel> getScrollModelContacts(

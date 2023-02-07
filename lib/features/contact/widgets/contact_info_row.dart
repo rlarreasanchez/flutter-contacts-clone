@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 class ContactInfoRow extends StatelessWidget {
@@ -7,12 +5,14 @@ class ContactInfoRow extends StatelessWidget {
   final String title;
   final String? subtitle;
   final Widget? trailing;
+  final Color? headerIconColor;
   final void Function()? onTap;
 
   const ContactInfoRow({
     Key? key,
     required this.headerIcon,
     required this.title,
+    this.headerIconColor,
     this.onTap,
     this.trailing,
     this.subtitle,
@@ -28,6 +28,7 @@ class ContactInfoRow extends StatelessWidget {
           children: [
             Icon(
               headerIcon,
+              color: headerIconColor ?? Colors.black87,
             ),
             const SizedBox(
               width: 20,
@@ -39,7 +40,7 @@ class ContactInfoRow extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(fontSize: 16, color: Colors.black87),
                   ),

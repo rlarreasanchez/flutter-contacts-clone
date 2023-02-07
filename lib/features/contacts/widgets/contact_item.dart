@@ -1,8 +1,10 @@
+import 'package:async/async.dart';
+import 'package:contactos_app/features/contact/providers/contact_provider.dart';
+import 'package:contactos_app/features/contacts/provider/contacts_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:contactos_app/main.dart';
 import 'package:contactos_app/shared/utils/utils.dart';
 import 'package:contactos_app/features/contact/models/contact_model.dart';
 import 'package:contactos_app/features/contacts/utils/contacts_utils.dart';
@@ -54,7 +56,7 @@ class ContactItem extends ConsumerWidget {
     return InkWell(
       onTap: () {
         Future.delayed(const Duration(milliseconds: 150), () {
-          ref.read(contactProvider.notifier).state = contact;
+          ref.read(contactProvider.notifier).setContact(contact);
           Navigator.pushNamed(context, 'contact', arguments: contact);
         });
       },
@@ -67,7 +69,7 @@ class ContactItem extends ConsumerWidget {
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 7),
-              child: _ContactAvatarItem(
+              child: ContactAvatarItem(
                 contact: contact,
               ),
             ),
@@ -106,72 +108,29 @@ class ContactItem extends ConsumerWidget {
                     ],
                   )),
             ),
-            // if (withFavIcon)
-            //   Padding(
-            //     padding: const EdgeInsets.only(right: 40.0),
-            //     child: IconButton(
-            //         // TODO: Llamar a hacer el toggle de favorito del contacto
-            //         onPressed: () {},
-            //         icon: (contact.favorite ?? false)
-            //             ? Icon(
-            //                 Icons.star,
-            //                 color: Theme.of(context).primaryColor,
-            //               )
-            //             : const Icon(
-            //                 Icons.star_outline,
-            //                 color: Colors.black54,
-            //               )),
-            //   )
+            if (withFavIcon)
+              Padding(
+                padding: const EdgeInsets.only(right: 40.0),
+                child: IconButton(
+                    onPressed: () {
+                      contact.toggleFavorite();
+                      ref
+                          .read(contactsProvider.notifier)
+                          .updateContact(contact);
+                    },
+                    icon: (contact.isFavorite)
+                        ? Icon(
+                            Icons.star,
+                            color: Theme.of(context).primaryColor,
+                          )
+                        : const Icon(
+                            Icons.star_outline,
+                            color: Colors.black54,
+                          )),
+              )
           ],
         ),
       ),
     );
-  }
-}
-
-class _ContactAvatarItem extends StatefulWidget {
-  final ContactModel contact;
-  const _ContactAvatarItem({required this.contact});
-
-  @override
-  State<_ContactAvatarItem> createState() => __ContactAvatarItemState();
-}
-
-class __ContactAvatarItemState extends State<_ContactAvatarItem> {
-  Uint8List? avatar;
-
-  Future<void> getAvatar() async {
-    final avatarResponse = await ContactsService.getAvatar(widget.contact);
-    setState(() {
-      avatar = avatarResponse;
-    });
-  }
-
-  @override
-  void initState() {
-    getAvatar();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return avatar != null
-        ? ClipRRect(
-            borderRadius: BorderRadius.circular(25.0),
-            child: Image.memory(
-              avatar!,
-              width: 40,
-              height: 40,
-            ),
-          )
-        : CircleAvatar(
-            backgroundColor:
-                ContactsUtils.getColor(widget.contact.identifier ?? '0'),
-            radius: 20,
-            child: Text(
-              widget.contact.displayName![0].toUpperCase(),
-              style: const TextStyle(fontSize: 18, color: Colors.white),
-            ),
-          );
   }
 }

@@ -39,28 +39,29 @@ class SearchScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-        backgroundColor: const Color(0xffF2F5FB),
-        body: SafeArea(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const _SearchHeader(),
-              Expanded(
-                  child: CustomScrollView(
-                slivers: [
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    sliver: SliverToBoxAdapter(
-                        child: Column(
-                      children: [...filterContactList(contactsState.contacts)],
-                    )),
-                  )
-                ],
-              ))
-            ],
-          ),
-        ));
+      backgroundColor: const Color(0xffF2F5FB),
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const _SearchHeader(),
+            Expanded(
+                child: CustomScrollView(
+              slivers: [
+                SliverPadding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  sliver: SliverToBoxAdapter(
+                      child: Column(
+                    children: [...filterContactList(contactsState.contacts)],
+                  )),
+                )
+              ],
+            ))
+          ],
+        ),
+      ),
+    );
   }
 }
 

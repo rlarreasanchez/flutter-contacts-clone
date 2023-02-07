@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:animate_do/animate_do.dart';
+import 'package:contactos_app/features/contact/providers/contact_provider.dart';
 import 'package:contactos_app/features/contact/screens/contact_screen.dart';
-import 'package:contactos_app/main.dart';
+import 'package:contactos_app/features/contacts/provider/contacts_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,21 +26,30 @@ class ContactAppBar extends ConsumerWidget implements PreferredSizeWidget {
       surfaceTintColor: Colors.white,
       backgroundColor: Colors.white,
       elevation: 0.0,
-      actions: const [
-        Icon(Icons.edit_outlined),
-        SizedBox(
+      actions: [
+        const Icon(Icons.edit_outlined),
+        const SizedBox(
           width: 20,
         ),
-        Icon(Icons.star),
-        SizedBox(
+        InkWell(
+          onTap: () {
+            contactRef.toggleFavorite();
+            ref.read(contactProvider.notifier).setContact(contactRef);
+            ref.read(contactsProvider.notifier).updateContact(contactRef);
+          },
+          child: (contactRef!.isFavorite)
+              ? const Icon(Icons.star)
+              : const Icon(Icons.star_outline),
+        ),
+        const SizedBox(
           width: 20,
         ),
-        Icon(Icons.more_vert),
-        SizedBox(
+        const Icon(Icons.more_vert),
+        const SizedBox(
           width: 20,
         ),
       ],
-      title: _ContactAppBarTitle(title: contactRef!.displayName ?? ''),
+      title: _ContactAppBarTitle(title: contactRef.displayName ?? ''),
     );
   }
 }

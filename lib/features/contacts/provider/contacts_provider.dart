@@ -50,6 +50,13 @@ class ContactsNotifier extends StateNotifier<ContactsState> {
           error: 'Fallo al cargar la lista de Contactos');
     }
   }
+
+  updateContact(ContactModel contact) {
+    List<ContactModel> contacts = state.contacts;
+    List<ContactModel> restContacts =
+        contacts.where((c) => c.identifier != contact.identifier).toList();
+    state = state.copyWith(contacts: [...restContacts, contact]);
+  }
 }
 
 final contactsProvider =

@@ -41,11 +41,18 @@ class ContactsStickySliver extends StatelessWidget {
               index: index, letter: item.letter ?? '', favorite: item.favorite)
           : const SizedBox(),
       sliver: SliverPadding(
-          padding: const EdgeInsets.only(left: 60),
-          sliver: SliverToBoxAdapter(
-              child: Column(
-            children: [...generateContactList(item.contacts)],
-          ))),
+        padding: const EdgeInsets.only(left: 60),
+        sliver: SliverList(
+          delegate: SliverChildBuilderDelegate(
+              (context, index) => FadeIn(
+                    child: ContactItem(
+                      contact: item.contacts[index],
+                      withFavIcon: withFavorites,
+                    ),
+                  ),
+              childCount: item.contacts.length),
+        ),
+      ),
     );
   }
 }

@@ -1,24 +1,27 @@
+import 'package:contactos_app/features/contacts/provider/contacts_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:contactos_app/features/favorites/screens/select_favorites_screen.dart';
 import 'package:contactos_app/features/contact/models/contact_model.dart';
 import 'package:contactos_app/features/contacts/widgets/contacts_widgets.dart';
 import 'package:contactos_app/features/favorites/widgets/favorites_widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class FavoritesScreen extends StatelessWidget {
+class FavoritesScreen extends ConsumerWidget {
   const FavoritesScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final contactsRef = ref.watch(contactsProvider);
     List<ContactItem> getFavorites(List<ContactModel> contactos) {
       return contactos
-          // .where((contacto) => contacto.favorite ?? false)
+          .where((contacto) => contacto.isFavorite)
           .map((c) => ContactItem(
                 contact: c,
               ))
           .toList();
     }
 
-    // List<ContactItem> favorites = getFavorites(contactsFake);
+    List<ContactItem> favorites = getFavorites(contactsRef.contacts);
 
     return SafeArea(
       child: Scaffold(
@@ -37,10 +40,10 @@ class FavoritesScreen extends StatelessWidget {
                   delegate: SliverChildListDelegate(
                 [
                   const _FavoritesTitleAction(),
-                  // if (favorites.isEmpty) const FavoritesEmptyContainer(),
+                  if (favorites.isEmpty) const FavoritesEmptyContainer(),
                 ],
               )),
-              // FavoritesGrid(contacts: favorites),
+              FavoritesGrid(contacts: favorites),
               SliverList(
                   delegate: SliverChildListDelegate([
                 const SizedBox(

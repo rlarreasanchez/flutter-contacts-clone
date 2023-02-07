@@ -1,6 +1,8 @@
+import 'dart:developer';
+
+import 'package:contactos_app/features/contact/providers/contact_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:contactos_app/main.dart';
 import 'package:contactos_app/extensions/string_extension.dart';
 import 'package:contactos_app/features/contacts/utils/contacts_utils.dart';
 import 'package:contactos_app/features/contact/widgets/contact_widgets.dart';
@@ -51,6 +53,7 @@ class ContactInfo extends ConsumerWidget {
                   (email) => ContactInfoRow(
                     headerIcon: Icons.mail_outline,
                     title: email.value!,
+                    subtitle: email.label?.capitalize(),
                     onTap: () async {
                       if (email.value!.isNotEmpty) {
                         await ContactsUtils.launchContactUrl(
@@ -58,17 +61,28 @@ class ContactInfo extends ConsumerWidget {
                       }
                     },
                   ),
-                )
+                ),
+              if (contactRef.whatsAppPhone != null)
+                ContactInfoRow(
+                  headerIcon: Icons.whatsapp_rounded,
+                  headerIconColor: Colors.green,
+                  title: 'Mandar Whatsapp a ${contactRef.whatsAppPhone}',
+                  onTap: () async {
+                    await ContactsUtils.launchContactUrl(
+                        "whatsapp://send?phone=${contactRef.whatsAppPhone}");
+                  },
+                ),
             ]),
             const SizedBox(
               height: 20,
             ),
-            const ContactCardContainer(title: 'Información general', children: [
-              ContactInfoRow(
-                headerIcon: Icons.business_sharp,
-                title: 'MAGTEL',
-              )
-            ]),
+            if (contactRef.company != null && contactRef.company!.isNotEmpty)
+              ContactCardContainer(title: 'Información general', children: [
+                ContactInfoRow(
+                  headerIcon: Icons.business_sharp,
+                  title: contactRef.company!.toUpperCase(),
+                )
+              ]),
             const SizedBox(
               height: 200,
             ),

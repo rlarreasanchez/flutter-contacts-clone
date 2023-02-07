@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:contactos_app/theme/app_theme.dart';
-import 'package:contactos_app/features/contact/models/contact_model.dart';
 import 'package:contactos_app/features/contact/screens/contact_screen.dart';
 import 'package:contactos_app/features/contacts/screens/search_screen.dart';
 import 'package:contactos_app/features/home/screens/home_screen.dart';
 
-final contactProvider = StateProvider<ContactModel?>((ref) => null);
+void main() async {
+  await Hive.initFlutter();
+  await Hive.openBox('myFavorites');
 
-void main() {
   runApp(
     const ProviderScope(
       child: MyApp(),

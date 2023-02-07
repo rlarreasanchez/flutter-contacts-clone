@@ -1,5 +1,6 @@
+import 'package:contactos_app/features/contact/providers/contact_provider.dart';
+import 'package:contactos_app/features/contacts/utils/contacts_utils.dart';
 import 'package:contactos_app/features/contacts/widgets/contacts_widgets.dart';
-import 'package:contactos_app/main.dart';
 import 'package:contactos_app/shared/widgets/shared_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,20 +17,22 @@ class FavoritesGrid extends ConsumerWidget {
             crossAxisCount: 4,
             mainAxisSpacing: 5,
             crossAxisSpacing: 25,
-            childAspectRatio: 0.6),
+            childAspectRatio: 0.57),
         delegate: SliverChildListDelegate(
           [
             ...contacts.map((contact) => SingleGridItem(
-                  // imgUrl: contact.contact.imgUrl,
-                  imgUrl: '',
+                  header: ContactAvatarItem(
+                    contact: contact.contact,
+                    radius: 30,
+                  ),
                   title: contact.contact.displayName ?? '',
                   color:
-                      // contact.contact.color ?? Theme.of(context).primaryColor,
-                      Theme.of(context).primaryColor,
+                      ContactsUtils.getColor(contact.contact.identifier ?? '0'),
                   onTap: () {
                     Future.delayed(const Duration(milliseconds: 150), () {
-                      ref.read(contactProvider.notifier).state =
-                          contact.contact;
+                      ref
+                          .read(contactProvider.notifier)
+                          .setContact(contact.contact);
                       Navigator.pushNamed(context, 'contact',
                           arguments: contact);
                     });

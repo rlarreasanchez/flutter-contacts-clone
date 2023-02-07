@@ -1,7 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:contactos_app/features/contact/providers/contact_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
-import 'package:contactos_app/main.dart';
 import 'package:contactos_app/constants/ui_constants.dart';
 import 'package:contactos_app/features/contact/widgets/contact_widgets.dart';
 
@@ -34,21 +36,23 @@ class ContactScreen extends ConsumerWidget {
     }
 
     return Scaffold(
-        backgroundColor: Colors.white,
-        appBar: ContactAppBar(
+      backgroundColor: Colors.white,
+      appBar: ContactAppBar(
+        controller: _controller,
+      ),
+      body: NotificationListener<ScrollNotification>(
+        onNotification: checkShowAppbarTitle,
+        child: CustomScrollView(
+          physics: const BouncingScrollPhysics(),
           controller: _controller,
+          slivers: [
+            ContactInfoHeader(contact: contactRef!),
+            SliverStickyHeader(
+                header: const CallActionsButtons(),
+                sliver: const ContactInfo()),
+          ],
         ),
-        body: NotificationListener<ScrollNotification>(
-            onNotification: checkShowAppbarTitle,
-            child: CustomScrollView(
-              physics: const BouncingScrollPhysics(),
-              controller: _controller,
-              slivers: [
-                ContactInfoHeader(contact: contactRef!),
-                SliverStickyHeader(
-                    header: const CallActionsButtons(),
-                    sliver: const ContactInfo()),
-              ],
-            )));
+      ),
+    );
   }
 }

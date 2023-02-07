@@ -1,6 +1,7 @@
+import 'package:async/async.dart';
 import 'package:contactos_app/features/contact/models/contact_model.dart';
+import 'package:contactos_app/features/contact/providers/contact_provider.dart';
 import 'package:contactos_app/features/contacts/utils/contacts_utils.dart';
-import 'package:contactos_app/main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:contactos_app/constants/ui_constants.dart';
@@ -22,12 +23,20 @@ class ContactInfoHeader extends StatefulWidget {
 class _ContactInfoHeaderState extends State<ContactInfoHeader> {
   Uint8List? avatar;
   bool isLoading = true;
+  CancelableOperation? _myCancelableFuture;
 
   Future<void> getAvatar() async {
     setState(() {
       isLoading = true;
     });
-    final avatarResponse = await ContactsService.getAvatar(widget.contact);
+
+    _myCancelableFuture = CancelableOperation.fromFuture(
+      ContactsService.getAvatar(widget.contact),
+      onCancel: () => 'Future has been canceld',
+    );
+
+    final avatarResponse = await _myCancelableFuture?.value;
+
     setState(() {
       avatar = avatarResponse;
       isLoading = false;
@@ -38,6 +47,12 @@ class _ContactInfoHeaderState extends State<ContactInfoHeader> {
   void initState() {
     getAvatar();
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _myCancelableFuture?.cancel();
+    super.dispose();
   }
 
   @override
@@ -58,7 +73,10 @@ class _ContactInfoHeaderState extends State<ContactInfoHeader> {
                   id: widget.contact.identifier ?? '0',
                   avatar: avatar,
                   isLoading: isLoading,
-                  letter: widget.contact.displayName![0].toUpperCase()),
+                  letter: widget.contact.displayName != null &&
+                          widget.contact.displayName!.isNotEmpty
+                      ? widget.contact.displayName![0].toUpperCase()
+                      : ''),
             ),
             SizedBox(
               height: 70,
