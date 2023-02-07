@@ -18,7 +18,9 @@ class FavoritesScreen extends ConsumerWidget {
           .map((c) => ContactItem(
                 contact: c,
               ))
-          .toList();
+          .toList()
+        ..sort(
+            (a, b) => a.contact.displayName!.compareTo(b.contact.displayName!));
     }
 
     List<ContactItem> favorites = getFavorites(contactsRef.contacts);
@@ -32,7 +34,7 @@ class FavoritesScreen extends ConsumerWidget {
             // Buscador
             const FavoritesSearchBar(),
             const SizedBox(
-              height: 5,
+              height: 10,
             ),
             Expanded(
                 child: CustomScrollView(slivers: <Widget>[
@@ -44,20 +46,6 @@ class FavoritesScreen extends ConsumerWidget {
                 ],
               )),
               FavoritesGrid(contacts: favorites),
-              SliverList(
-                  delegate: SliverChildListDelegate([
-                const SizedBox(
-                  height: 20,
-                ),
-                const _RecientesTitleAction(),
-                const SizedBox(
-                  height: 10,
-                ),
-                const RecientesCardContainer(),
-                const SizedBox(
-                  height: 20,
-                ),
-              ]))
             ]))
           ]),
         ),

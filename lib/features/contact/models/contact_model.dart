@@ -1,9 +1,7 @@
-import 'dart:developer';
-
+import 'package:contactos_app/database/favorites_db.dart';
 import 'package:contactos_app/shared/utils/utils.dart';
 import 'package:hive/hive.dart';
 import 'package:contacts_service/contacts_service.dart';
-import 'package:diacritic/diacritic.dart';
 import 'package:flutter/animation.dart';
 
 class ContactModel extends Contact {
@@ -67,18 +65,13 @@ class ContactModel extends Contact {
   }
 
   void toggleFavorite() {
-    var myFavorites = Hive.box('myFavorites');
-    var favorites = myFavorites.get('favorites');
-    List<String> favoritesList = favorites ?? [];
+    FavoritesDb favoriteDb = FavoritesDb();
     isFavorite = !isFavorite;
     if (!isFavorite) {
-      favoritesList =
-          favoritesList.where((id) => id != (identifier ?? '')).toList();
+      favoriteDb.removeFavorite(identifier ?? '');
     } else {
-      favoritesList.add(identifier ?? '');
+      favoriteDb.addFavorite(identifier ?? '');
     }
-    favoritesList = favoritesList.toSet().toList();
-    myFavorites.put('favorites', favoritesList);
   }
 
   String? getWhatsappPhone(List<Item> phones) {
