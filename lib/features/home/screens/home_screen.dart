@@ -1,12 +1,12 @@
-import 'package:contactos_app/features/contacts/provider/contacts_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:contactos_app/features/config/screens/config_screen.dart';
-import 'package:contactos_app/features/contacts/screens/contacts_screen.dart';
-import 'package:contactos_app/features/favorites/screens/favorites_screen.dart';
-import 'package:contactos_app/features/home/widgets/animated_button.dart';
-import 'package:contactos_app/features/home/models/tab_item_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:contactos_app/features/home/widgets/animated_button.dart';
+import 'package:contactos_app/features/home/models/tab_item_model.dart';
+import 'package:contactos_app/features/contacts/provider/contacts_provider.dart';
+// import 'package:contactos_app/features/config/screens/config_screen.dart';
+import 'package:contactos_app/features/contacts/screens/contacts_screen.dart';
+import 'package:contactos_app/features/favorites/screens/favorites_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -21,13 +21,13 @@ class HomeScreenState extends ConsumerState<HomeScreen> {
   static final List<TabItemModel> _items = [
     TabItemModel('Contactos', Icons.person_outline, Icons.person),
     TabItemModel('Favoritos', Icons.favorite_outline, Icons.favorite),
-    TabItemModel('Configuración', Icons.settings_outlined, Icons.settings),
+    // TabItemModel('Configuración', Icons.settings_outlined, Icons.settings),
   ];
 
   static final List<Widget> _screens = [
     const ContactsScreen(),
     const FavoritesScreen(),
-    const ConfigScreen()
+    // const ConfigScreen()
   ];
 
   List<BottomNavigationBarItem> getBottomTabs(List<TabItemModel> tabs) {

@@ -21,67 +21,49 @@ class CallActionsButtons extends ConsumerWidget {
           color: Colors.white,
           border: Border(bottom: BorderSide(width: 1, color: Colors.black12))),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(
-              Icons.phone_outlined,
-              color: Color(0xff0B57D0),
-              size: 30,
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Text(
-              'Llamar',
-              style: TextStyle(
-                  color: Color(0xff0B57D0),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500),
-            )
-          ],
-        ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(
-              Icons.comment_outlined,
-              color: Color(0xff0B57D0),
-              size: 30,
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Text(
-              'SMS',
-              style: TextStyle(
-                  color: Color(0xff0B57D0),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500),
-            )
-          ],
-        ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(
-              Icons.video_camera_front_outlined,
-              color: Color(0xff0B57D0),
-              size: 30,
-            ),
-            SizedBox(
-              height: 5,
-            ),
-            Text(
-              'Configurar',
-              style: TextStyle(
-                  color: Color(0xff0B57D0),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500),
-            )
-          ],
-        ),
-        if (contactoRef.emails != null && contactoRef.emails!.isNotEmpty)
+        if (contactoRef.phonesSanitized.isNotEmpty)
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Icon(
+                Icons.phone_outlined,
+                color: Color(0xff0B57D0),
+                size: 30,
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                'Llamar',
+                style: TextStyle(
+                    color: Color(0xff0B57D0),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500),
+              )
+            ],
+          ),
+        if (contactoRef.phonesSanitized.isNotEmpty)
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: const [
+              Icon(
+                Icons.comment_outlined,
+                color: Color(0xff0B57D0),
+                size: 30,
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              Text(
+                'SMS',
+                style: TextStyle(
+                    color: Color(0xff0B57D0),
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500),
+              )
+            ],
+          ),
+        if (contactoRef.emailsSanitized.isNotEmpty)
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [

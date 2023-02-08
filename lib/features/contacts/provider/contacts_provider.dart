@@ -57,6 +57,13 @@ class ContactsNotifier extends StateNotifier<ContactsState> {
         contacts.where((c) => c.identifier != contact.identifier).toList();
     state = state.copyWith(contacts: [...restContacts, contact]);
   }
+
+  deleteContact(ContactModel contact) {
+    List<ContactModel> contacts = state.contacts;
+    List<ContactModel> restContacts =
+        contacts.where((c) => c.identifier != contact.identifier).toList();
+    state = state.copyWith(contacts: [...restContacts]);
+  }
 }
 
 final contactsProvider =

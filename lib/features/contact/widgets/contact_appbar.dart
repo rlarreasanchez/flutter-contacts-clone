@@ -1,11 +1,13 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:contacts_service/contacts_service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:contactos_app/features/contact/models/contact_model.dart';
 import 'package:contactos_app/features/contact/providers/contact_provider.dart';
 import 'package:contactos_app/features/contact/screens/contact_screen.dart';
 import 'package:contactos_app/features/contacts/provider/contacts_provider.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ContactAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final ScrollController controller;
@@ -27,29 +29,140 @@ class ContactAppBar extends ConsumerWidget implements PreferredSizeWidget {
       backgroundColor: Colors.white,
       elevation: 0.0,
       actions: [
-        const Icon(Icons.edit_outlined),
-        const SizedBox(
-          width: 20,
-        ),
-        InkWell(
-          onTap: () {
-            contactRef.toggleFavorite();
-            ref.read(contactProvider.notifier).setContact(contactRef);
-            ref.read(contactsProvider.notifier).updateContact(contactRef);
-          },
-          child: (contactRef!.isFavorite)
-              ? const Icon(Icons.star)
-              : const Icon(Icons.star_outline),
-        ),
-        const SizedBox(
-          width: 20,
-        ),
-        const Icon(Icons.more_vert),
-        const SizedBox(
-          width: 20,
-        ),
+        _EditButton(contactRef: contactRef),
+        _FavoriteButton(contactRef: contactRef),
+        _DeleteButton(contactRef: contactRef),
       ],
-      title: _ContactAppBarTitle(title: contactRef.displayName ?? ''),
+      title: _ContactAppBarTitle(title: contactRef?.displayName ?? ''),
+    );
+  }
+}
+
+class _DeleteButton extends ConsumerWidget {
+  const _DeleteButton({
+    Key? key,
+    required this.contactRef,
+  }) : super(key: key);
+
+  final ContactModel? contactRef;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    void comeBackFromDeletion() {
+      Navigator.pop(context);
+      Navigator.pop(context);
+      const snackBar = SnackBar(
+        content: Text(
+          'Contacto eliminado con éxito',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+        ),
+        backgroundColor: Colors.green,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    }
+
+    return IconButton(
+      onPressed: () async {
+        if (contactRef != null) {
+          showDialog(
+            context: context,
+            builder: ((context) => AlertDialog(
+                  title: const Text("Eliminar Contacto"),
+                  content: const Text(
+                      "Estás seguro que deseas eliminar el contacto?"),
+                  actions: [
+                    TextButton(
+                      child: const Text(
+                        "Cancelar",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    TextButton(
+                      child: Text(
+                        "Continuar",
+                        style: TextStyle(color: Theme.of(context).primaryColor),
+                      ),
+                      onPressed: () async {
+                        try {
+                          await ContactsService.deleteContact(contactRef!);
+                          ref.read(contactProvider.notifier).deleteContact();
+                          ref
+                              .read(contactsProvider.notifier)
+                              .deleteContact(contactRef!);
+                          comeBackFromDeletion();
+                        } catch (e) {
+                          inspect(e);
+                        }
+                      },
+                    ),
+                  ],
+                )),
+          );
+        }
+      },
+      icon: const Icon(
+        Icons.delete,
+        color: Colors.red,
+      ),
+    );
+  }
+}
+
+class _FavoriteButton extends ConsumerWidget {
+  const _FavoriteButton({
+    Key? key,
+    required this.contactRef,
+  }) : super(key: key);
+
+  final ContactModel? contactRef;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return IconButton(
+      onPressed: () {
+        if (contactRef != null) {
+          contactRef!.toggleFavorite();
+          ref.read(contactProvider.notifier).setContact(contactRef!);
+          ref.read(contactsProvider.notifier).updateContact(contactRef!);
+        }
+      },
+      icon: (contactRef != null && contactRef!.isFavorite)
+          ? const Icon(Icons.star)
+          : const Icon(Icons.star_outline),
+    );
+  }
+}
+
+class _EditButton extends ConsumerWidget {
+  const _EditButton({
+    Key? key,
+    required this.contactRef,
+  }) : super(key: key);
+
+  final ContactModel? contactRef;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return IconButton(
+      onPressed: () async {
+        if (contactRef != null) {
+          try {
+            Contact updatedContact = await ContactsService.openExistingContact(
+                contactRef!,
+                androidLocalizedLabels: false);
+            ContactModel contactModel = ContactModel.fromMap(updatedContact);
+            ref.read(contactProvider.notifier).setContact(contactModel);
+            ref.read(contactProvider.notifier).setAvatar();
+            ref.read(contactsProvider.notifier).updateContact(contactModel);
+          } catch (e) {
+            inspect(e);
+          }
+        }
+      },
+      icon: const Icon(Icons.edit_outlined),
     );
   }
 }

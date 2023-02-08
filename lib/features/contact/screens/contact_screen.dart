@@ -1,10 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:contactos_app/features/contact/providers/contact_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:contactos_app/constants/ui_constants.dart';
+import 'package:contactos_app/features/contact/providers/contact_provider.dart';
 import 'package:contactos_app/features/contact/widgets/contact_widgets.dart';
 
 final showAppbarTitle = StateProvider.autoDispose<bool>((ref) => false);
@@ -35,6 +33,12 @@ class ContactScreen extends ConsumerWidget {
       return true;
     }
 
+    if (contactRef == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: ContactAppBar(
@@ -46,7 +50,7 @@ class ContactScreen extends ConsumerWidget {
           physics: const BouncingScrollPhysics(),
           controller: _controller,
           slivers: [
-            ContactInfoHeader(contact: contactRef!),
+            ContactInfoHeader(contact: contactRef),
             SliverStickyHeader(
                 header: const CallActionsButtons(),
                 sliver: const ContactInfo()),
