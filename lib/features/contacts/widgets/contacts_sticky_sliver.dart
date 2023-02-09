@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
-import 'package:contactos_app/features/contact/models/contact_model.dart';
 import 'package:contactos_app/features/contacts/models/contact_list_item_model.dart';
 import 'package:contactos_app/features/contacts/widgets/contacts_widgets.dart';
 
@@ -23,17 +22,6 @@ class ContactsStickySliver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> generateContactList(List<ContactModel> contactos) {
-      return contactos
-          .map((contacto) => FadeIn(
-                child: ContactItem(
-                  contact: contacto,
-                  withFavIcon: withFavorites,
-                ),
-              ))
-          .toList();
-    }
-
     return SliverStickyHeader(
       overlapsContent: true,
       header: (withHeaders)
@@ -44,13 +32,14 @@ class ContactsStickySliver extends StatelessWidget {
         padding: const EdgeInsets.only(left: 60),
         sliver: SliverList(
           delegate: SliverChildBuilderDelegate(
-              (context, index) => FadeIn(
-                    child: ContactItem(
-                      contact: item.contacts[index],
-                      withFavIcon: withFavorites,
-                    ),
-                  ),
-              childCount: item.contacts.length),
+            (context, index) => FadeIn(
+              child: ContactItem(
+                contact: item.contacts[index],
+                withFavIcon: withFavorites,
+              ),
+            ),
+            childCount: item.contacts.length,
+          ),
         ),
       ),
     );
@@ -83,11 +72,14 @@ class _SideHeader extends StatelessWidget {
                 color: Theme.of(context).primaryColor,
                 size: 25,
               )
-            : Text(letter.toUpperCase(),
+            : Text(
+                letter.toUpperCase(),
                 style: TextStyle(
-                    fontSize: 24,
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w500)),
+                  fontSize: 24,
+                  color: Theme.of(context).primaryColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
       ),
     );
   }

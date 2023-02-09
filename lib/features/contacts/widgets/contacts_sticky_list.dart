@@ -1,3 +1,4 @@
+import 'package:contactos_app/features/contacts/provider/filter_contacts_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:contactos_app/features/contacts/provider/contacts_provider.dart';
@@ -28,9 +29,27 @@ class ContactsStickyList extends ConsumerWidget {
         .toList();
   }
 
+  List<ContactModel> getFilteredContacts(
+      List<ContactModel> contacts, FilterContactsState filter) {
+    List<ContactModel> contactsFiltered = [...contacts];
+    if (filter.byPhone) {
+      contactsFiltered = contactsFiltered
+          .where((contact) => contact.phonesSanitized.isNotEmpty)
+          .toList();
+    }
+    if (filter.byEmail) {
+      contactsFiltered = contactsFiltered
+          .where((contact) => contact.emailsSanitized.isNotEmpty)
+          .toList();
+    }
+
+    return contactsFiltered;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final contactsStateRef = ref.watch(contactsProvider);
+    final filter = ref.watch(filterContactsProvider);
 
     if (contactsStateRef.loading && contactsStateRef.contacts.isEmpty) {
       return Center(
@@ -48,8 +67,8 @@ class ContactsStickyList extends ConsumerWidget {
       heightScrollThumb: 70.0,
       offsetHeight: 20,
       controller: _controller,
-      contactsModels:
-          ContactsUtils.getContactsStickyList(contactsStateRef.contacts),
+      contactsModels: ContactsUtils.getContactsStickyList(
+          getFilteredContacts(contactsStateRef.contacts, filter)),
       child: _RefreshContactsIndicator(
         child: CustomScrollView(
           controller: _controller,
@@ -57,7 +76,9 @@ class ContactsStickyList extends ConsumerWidget {
             _ContactsListHeader(
                 title: 'Contactos',
                 nContacts: contactsStateRef.contacts.length),
-            ...generateContactsSlivers(contactsStateRef.contacts, _controller)
+            ...generateContactsSlivers(
+                getFilteredContacts(contactsStateRef.contacts, filter),
+                _controller)
           ],
         ),
       ),

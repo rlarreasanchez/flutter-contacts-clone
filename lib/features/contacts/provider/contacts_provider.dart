@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:contactos_app/features/contacts/provider/filter_contacts_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -36,12 +37,13 @@ class ContactsState {
 }
 
 class ContactsNotifier extends StateNotifier<ContactsState> {
-  ContactsNotifier()
+  ContactsNotifier(this.ref)
       : super(const ContactsState(
             errorMessage: '',
             loading: false,
             contacts: [],
             activeContact: null));
+  final Ref ref;
 
   void getContacts() async {
     state = state.copyWith(loading: true);
@@ -145,5 +147,5 @@ class ContactsNotifier extends StateNotifier<ContactsState> {
 
 final contactsProvider =
     StateNotifierProvider<ContactsNotifier, ContactsState>((ref) {
-  return ContactsNotifier();
+  return ContactsNotifier(ref);
 });
