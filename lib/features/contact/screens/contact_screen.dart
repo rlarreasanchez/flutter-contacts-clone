@@ -1,26 +1,39 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 import 'package:contactos_app/constants/ui_constants.dart';
-import 'package:contactos_app/features/contact/providers/contact_provider.dart';
+import 'package:contactos_app/features/contacts/provider/contacts_provider.dart';
 import 'package:contactos_app/features/contact/widgets/contact_widgets.dart';
 
 final showAppbarTitle = StateProvider.autoDispose<bool>((ref) => false);
 
-class ContactScreen extends ConsumerWidget {
-  final ScrollController _controller = ScrollController();
-
-  ContactScreen({super.key});
+class ContactScreen extends ConsumerStatefulWidget {
+  const ContactScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final contactRef = ref.watch(contactProvider);
+  ContactScreenState createState() => ContactScreenState();
+}
+
+class ContactScreenState extends ConsumerState<ContactScreen> {
+  final ScrollController _controller = ScrollController();
+
+  @override
+  void initState() {
+    ref.read(contactsProvider.notifier).setActiveAvatar();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final contactsRef = ref.watch(contactsProvider);
 
     bool checkShowAppbarTitle(ScrollNotification notification) {
       if (notification is ScrollUpdateNotification) {
-        final limitHeight = (contactRef != null &&
-                contactRef.avatar != null &&
-                contactRef.avatar!.isNotEmpty)
+        final limitHeight = (contactsRef.activeContact != null &&
+                contactsRef.activeContact!.avatar != null &&
+                contactsRef.activeContact!.avatar!.isNotEmpty)
             ? UiConstants.contactHeaderLarge
             : UiConstants.contactHeaderSmall;
 
@@ -33,10 +46,8 @@ class ContactScreen extends ConsumerWidget {
       return true;
     }
 
-    if (contactRef == null) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+    if (contactsRef.activeContact == null) {
+      return Container();
     }
 
     return Scaffold(
@@ -50,7 +61,7 @@ class ContactScreen extends ConsumerWidget {
           physics: const BouncingScrollPhysics(),
           controller: _controller,
           slivers: [
-            ContactInfoHeader(contact: contactRef),
+            ContactInfoHeader(contact: contactsRef.activeContact!),
             SliverStickyHeader(
                 header: const CallActionsButtons(),
                 sliver: const ContactInfo()),

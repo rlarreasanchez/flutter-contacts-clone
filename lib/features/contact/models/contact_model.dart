@@ -1,15 +1,34 @@
-import 'package:contactos_app/database/favorites_db.dart';
-import 'package:contactos_app/shared/utils/utils.dart';
+import 'package:contactos_app/features/contacts/utils/contacts_utils.dart';
+import 'package:flutter/animation.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:contacts_service/contacts_service.dart';
-import 'package:flutter/animation.dart';
+import 'package:contactos_app/database/favorites_db.dart';
+import 'package:contactos_app/shared/utils/utils.dart';
 
 class ContactModel extends Contact {
-  List<Item> emailsSanitized = [];
-  List<Item> phonesSanitized = [];
-  bool isFavorite = false;
-  Color? color;
-  String? whatsAppPhone;
+  String? id;
+  ContactModel({
+    id,
+    super.displayName,
+    super.givenName,
+    super.middleName,
+    super.prefix,
+    super.suffix,
+    super.familyName,
+    super.company,
+    super.jobTitle,
+    super.emails,
+    super.phones,
+    super.postalAddresses,
+    super.avatar,
+    super.birthday,
+    super.androidAccountType,
+    super.androidAccountTypeRaw,
+    super.androidAccountName,
+  }) : super() {
+    identifier = id;
+  }
 
   ContactModel.fromMap(Contact contact) {
     identifier = contact.identifier;
@@ -29,29 +48,13 @@ class ContactModel extends Contact {
     postalAddresses = contact.postalAddresses;
     avatar = contact.avatar;
     birthday = contact.birthday;
-
-    emailsSanitized = sanitizeItems(contact.emails ?? []);
-    phonesSanitized = sanitizeItems((contact.phones ?? []).map((phone) {
-      phone.value = Utils.stringToPhoneNumber(phone.value ?? '');
-      return phone;
-    }).toList());
-
-    isFavorite = checkIfIsFavorite();
-    if (phonesSanitized.isNotEmpty && androidAccountName == 'WhatsApp') {
-      whatsAppPhone = getWhatsappPhone(phonesSanitized);
-    }
   }
 
-  List<Item> sanitizeItems(List<Item> items) {
-    if (items.isNotEmpty) {
-      var seen = <String>{};
-      return items.where((item) => seen.add(item.value ?? '')).toList();
-    }
-
-    return [];
+  Color get color {
+    return ContactsUtils.getColor(identifier ?? '0');
   }
 
-  bool checkIfIsFavorite() {
+  bool get isFavorite {
     var myFavorites = Hive.box('myFavorites');
     var favorites = myFavorites.get('favorites');
     if (favorites != null) {
@@ -64,20 +67,22 @@ class ContactModel extends Contact {
     return false;
   }
 
-  void toggleFavorite() {
-    FavoritesDb favoriteDb = FavoritesDb();
-    isFavorite = !isFavorite;
-    if (!isFavorite) {
-      favoriteDb.removeFavorite(identifier ?? '');
-    } else {
-      favoriteDb.addFavorite(identifier ?? '');
-    }
+  List<Item> get emailsSanitized {
+    return sanitizeItems(emails ?? []);
   }
 
-  String? getWhatsappPhone(List<Item> phones) {
-    if (phones.where((phone) => phone.label == 'móvil').isNotEmpty) {
+  List<Item> get phonesSanitized {
+    return sanitizeItems((phones ?? []).map((phone) {
+      phone.value = Utils.stringToPhoneNumber(phone.value ?? '');
+      return phone;
+    }).toList());
+  }
+
+  String? get whatsAppPhone {
+    if (phones != null &&
+        phones!.where((phone) => phone.label == 'móvil').isNotEmpty) {
       String? phoneString =
-          phones.firstWhere((phone) => phone.label == 'móvil').value;
+          phones!.firstWhere((phone) => phone.label == 'móvil').value;
       if (phoneString!.contains('+34')) {
         return phoneString;
       }
@@ -85,5 +90,49 @@ class ContactModel extends Contact {
     }
 
     return null;
+  }
+
+  List<Item> sanitizeItems(List<Item> items) {
+    if (items.isNotEmpty) {
+      var seen = <String>{};
+      return items.where((item) => seen.add(item.value ?? '')).toList();
+    }
+
+    return [];
+  }
+
+  void toggleFavorite() {
+    FavoritesDb favoriteDb = FavoritesDb();
+    bool toggleFav = !isFavorite;
+    if (!toggleFav) {
+      favoriteDb.removeFavorite(identifier ?? '');
+    } else {
+      favoriteDb.addFavorite(identifier ?? '');
+    }
+  }
+
+  ContactModel copyWith({
+    String? id,
+    Uint8List? newAvatar,
+  }) {
+    return ContactModel(
+      id: id ?? identifier,
+      displayName: displayName,
+      givenName: givenName,
+      middleName: middleName,
+      prefix: prefix,
+      suffix: suffix,
+      familyName: familyName,
+      company: company,
+      jobTitle: jobTitle,
+      emails: emails,
+      phones: phones,
+      postalAddresses: postalAddresses,
+      avatar: newAvatar ?? avatar,
+      birthday: birthday,
+      androidAccountType: androidAccountType,
+      androidAccountTypeRaw: androidAccountTypeRaw,
+      androidAccountName: androidAccountName,
+    );
   }
 }

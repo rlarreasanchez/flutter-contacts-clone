@@ -1,9 +1,7 @@
-import 'dart:developer';
-
-import 'package:contactos_app/features/contact/providers/contact_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:contactos_app/extensions/string_extension.dart';
+import 'package:contactos_app/features/contacts/provider/contacts_provider.dart';
 import 'package:contactos_app/features/contacts/utils/contacts_utils.dart';
 import 'package:contactos_app/features/contact/widgets/contact_widgets.dart';
 
@@ -14,7 +12,13 @@ class ContactInfo extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final contactRef = ref.watch(contactProvider);
+    final contactsRef = ref.watch(contactsProvider);
+
+    if (contactsRef.activeContact == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
 
     return SliverToBoxAdapter(
       child: Padding(
@@ -22,8 +26,8 @@ class ContactInfo extends ConsumerWidget {
         child: Column(
           children: [
             ContactCardContainer(title: 'Información de contacto', children: [
-              if (contactRef!.phonesSanitized.isNotEmpty)
-                ...contactRef.phonesSanitized.map(
+              if (contactsRef.activeContact!.phonesSanitized.isNotEmpty)
+                ...contactsRef.activeContact!.phonesSanitized.map(
                   (phone) => ContactInfoRow(
                     headerIcon: Icons.phone_outlined,
                     title: phone.value ?? '',
@@ -48,8 +52,8 @@ class ContactInfo extends ConsumerWidget {
                     },
                   ),
                 ),
-              if (contactRef.emailsSanitized.isNotEmpty)
-                ...contactRef.emailsSanitized.map(
+              if (contactsRef.activeContact!.emailsSanitized.isNotEmpty)
+                ...contactsRef.activeContact!.emailsSanitized.map(
                   (email) => ContactInfoRow(
                     headerIcon: Icons.mail_outline,
                     title: email.value!,
@@ -62,25 +66,27 @@ class ContactInfo extends ConsumerWidget {
                     },
                   ),
                 ),
-              if (contactRef.whatsAppPhone != null)
+              if (contactsRef.activeContact!.whatsAppPhone != null)
                 ContactInfoRow(
                   headerIcon: Icons.whatsapp_rounded,
                   headerIconColor: Colors.green,
-                  title: 'Mandar Whatsapp a ${contactRef.whatsAppPhone}',
+                  title:
+                      'Mandar Whatsapp a ${contactsRef.activeContact!.whatsAppPhone}',
                   onTap: () async {
                     await ContactsUtils.launchContactUrl(
-                        "whatsapp://send?phone=${contactRef.whatsAppPhone}");
+                        "whatsapp://send?phone=${contactsRef.activeContact!.whatsAppPhone}");
                   },
                 ),
             ]),
             const SizedBox(
               height: 20,
             ),
-            if (contactRef.company != null && contactRef.company!.isNotEmpty)
+            if (contactsRef.activeContact!.company != null &&
+                contactsRef.activeContact!.company!.isNotEmpty)
               ContactCardContainer(title: 'Información general', children: [
                 ContactInfoRow(
                   headerIcon: Icons.business_sharp,
-                  title: contactRef.company!.toUpperCase(),
+                  title: contactsRef.activeContact!.company!.toUpperCase(),
                 )
               ]),
             const SizedBox(

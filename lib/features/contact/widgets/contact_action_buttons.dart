@@ -1,6 +1,6 @@
-import 'package:contactos_app/features/contact/providers/contact_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:contactos_app/features/contacts/provider/contacts_provider.dart';
 
 class CallActionsButtons extends ConsumerWidget {
   const CallActionsButtons({
@@ -9,9 +9,9 @@ class CallActionsButtons extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final contactoRef = ref.watch(contactProvider);
+    final contactosRef = ref.watch(contactsProvider);
 
-    if (contactoRef == null) {
+    if (contactosRef.activeContact == null) {
       return const Text('Cargando...');
     }
 
@@ -21,7 +21,7 @@ class CallActionsButtons extends ConsumerWidget {
           color: Colors.white,
           border: Border(bottom: BorderSide(width: 1, color: Colors.black12))),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        if (contactoRef.phonesSanitized.isNotEmpty)
+        if (contactosRef.activeContact!.phonesSanitized.isNotEmpty)
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [
@@ -42,7 +42,7 @@ class CallActionsButtons extends ConsumerWidget {
               )
             ],
           ),
-        if (contactoRef.phonesSanitized.isNotEmpty)
+        if (contactosRef.activeContact!.phonesSanitized.isNotEmpty)
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [
@@ -63,7 +63,7 @@ class CallActionsButtons extends ConsumerWidget {
               )
             ],
           ),
-        if (contactoRef.emailsSanitized.isNotEmpty)
+        if (contactosRef.activeContact!.emailsSanitized.isNotEmpty)
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: const [

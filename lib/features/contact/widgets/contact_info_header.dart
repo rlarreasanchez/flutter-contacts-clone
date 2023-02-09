@@ -1,18 +1,11 @@
-import 'dart:developer';
-
-import 'package:async/async.dart';
-import 'package:contactos_app/features/contact/models/contact_model.dart';
-import 'package:contactos_app/features/contact/providers/contact_provider.dart';
-import 'package:contactos_app/features/contacts/provider/contacts_provider.dart';
-import 'package:contactos_app/features/contacts/utils/contacts_utils.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:contactos_app/constants/ui_constants.dart';
-import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:contactos_app/features/contacts/utils/contacts_utils.dart';
+import 'package:flutter/foundation.dart';
+import 'package:contactos_app/constants/ui_constants.dart';
+import 'package:contactos_app/features/contact/models/contact_model.dart';
+import 'package:contactos_app/features/contacts/provider/contacts_provider.dart';
 
-class ContactInfoHeader extends ConsumerStatefulWidget {
+class ContactInfoHeader extends ConsumerWidget {
   final ContactModel contact;
   const ContactInfoHeader({
     required this.contact,
@@ -20,50 +13,22 @@ class ContactInfoHeader extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  ContactInfoHeaderState createState() => ContactInfoHeaderState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final contactsRef = ref.watch(contactsProvider);
 
-class ContactInfoHeaderState extends ConsumerState<ContactInfoHeader> {
-  CancelableOperation? _myCancelableFuture;
-
-  // Future<void> getAvatar() async {
-  //   _myCancelableFuture = CancelableOperation.fromFuture(
-  //     ref.read(contactProvider.notifier).setAvatar(),
-  //     onCancel: () => 'Future has been canceld',
-  //   );
-
-  //   final avatarResponse = await _myCancelableFuture?.value;
-
-  //   setState(() {
-  //     avatar = avatarResponse;
-  //     isLoading = false;
-  //   });
-  // }
-
-  @override
-  void initState() {
-    ref.read(contactProvider.notifier).setAvatar();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _myCancelableFuture?.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final contact = ref.watch(contactProvider);
+    if (contactsRef.activeContact == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
 
     return SliverToBoxAdapter(
       child: Container(
         decoration: const BoxDecoration(
             border:
                 Border(bottom: BorderSide(width: 1, color: Colors.black12))),
-        height: contact != null &&
-                contact.avatar != null &&
-                contact.avatar!.isNotEmpty
+        height: contactsRef.activeContact!.avatar != null &&
+                contactsRef.activeContact!.avatar!.isNotEmpty
             ? UiConstants.contactHeaderLarge
             : UiConstants.contactHeaderSmall,
         child: Column(
@@ -71,12 +36,12 @@ class ContactInfoHeaderState extends ConsumerState<ContactInfoHeader> {
           children: [
             Expanded(
               child: _ContactAvatar(
-                  id: widget.contact.identifier ?? '0',
-                  avatar: contact!.avatar,
+                  color: contact.color,
+                  avatar: contactsRef.activeContact!.avatar,
                   isLoading: false,
-                  letter: widget.contact.displayName != null &&
-                          widget.contact.displayName!.isNotEmpty
-                      ? widget.contact.displayName![0].toUpperCase()
+                  letter: contact.displayName != null &&
+                          contact.displayName!.isNotEmpty
+                      ? contact.displayName![0].toUpperCase()
                       : ''),
             ),
             SizedBox(
@@ -86,8 +51,7 @@ class ContactInfoHeaderState extends ConsumerState<ContactInfoHeader> {
                 child: Align(
                   alignment: Alignment.center,
                   child: Text(
-                    (widget.contact.displayName ?? '')
-                        .replaceAll(' ', '\u{000A0}'),
+                    (contact.displayName ?? '').replaceAll(' ', '\u{000A0}'),
                     style: const TextStyle(color: Colors.black87, fontSize: 26),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -102,30 +66,20 @@ class ContactInfoHeaderState extends ConsumerState<ContactInfoHeader> {
   }
 }
 
-class _ContactAvatar extends ConsumerWidget {
+class _ContactAvatar extends StatelessWidget {
   final Uint8List? avatar;
   final bool isLoading;
   final String letter;
-  final String id;
+  final Color color;
 
   const _ContactAvatar(
-      {required this.id,
+      {required this.color,
       this.avatar,
       required this.isLoading,
       required this.letter});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // if (avatar != null) {
-    //   ref.read(contactProvider.notifier).state!.avatar = avatar;
-    // }
-
-    // if (isLoading) {
-    //   return Center(
-    //     child: CircularProgressIndicator(color: Theme.of(context).primaryColor),
-    //   );
-    // }
-
+  Widget build(BuildContext context) {
     return avatar != null && avatar!.isNotEmpty
         ? Image.memory(
             avatar!,
@@ -135,7 +89,7 @@ class _ContactAvatar extends ConsumerWidget {
             alignment: Alignment.center,
           )
         : CircleAvatar(
-            backgroundColor: ContactsUtils.getColor(id),
+            backgroundColor: color,
             maxRadius: 45,
             child: Text(
               letter,

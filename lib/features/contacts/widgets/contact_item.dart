@@ -1,13 +1,8 @@
-import 'package:async/async.dart';
-import 'package:contactos_app/features/contact/providers/contact_provider.dart';
-import 'package:contactos_app/features/contacts/provider/contacts_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
-import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:contactos_app/shared/utils/utils.dart';
 import 'package:contactos_app/features/contact/models/contact_model.dart';
-import 'package:contactos_app/features/contacts/utils/contacts_utils.dart';
+import 'package:contactos_app/features/contacts/provider/contacts_provider.dart';
 import 'package:contactos_app/features/contacts/widgets/contacts_widgets.dart';
 
 class ContactItem extends ConsumerWidget {
@@ -56,8 +51,8 @@ class ContactItem extends ConsumerWidget {
     return InkWell(
       onTap: () {
         Future.delayed(const Duration(milliseconds: 150), () {
-          ref.read(contactProvider.notifier).setContact(contact);
-          Navigator.pushNamed(context, 'contact', arguments: contact);
+          ref.read(contactsProvider.notifier).setActiveContact(contact);
+          Navigator.pushNamed(context, 'contact');
         });
       },
       splashColor: Colors.grey[400],
@@ -113,10 +108,10 @@ class ContactItem extends ConsumerWidget {
                 padding: const EdgeInsets.only(right: 40.0),
                 child: IconButton(
                     onPressed: () {
-                      contact.toggleFavorite();
+                      contact.copyWith().toggleFavorite();
                       ref
                           .read(contactsProvider.notifier)
-                          .updateContact(contact);
+                          .updateActiveContact(contact);
                     },
                     icon: (contact.isFavorite)
                         ? Icon(

@@ -1,27 +1,36 @@
 import 'dart:developer';
 
-import 'package:contactos_app/features/contact/models/contact_model.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:contactos_app/features/contact/models/contact_model.dart';
 
 @immutable
 class ContactsState {
   const ContactsState(
       {required this.errorMessage,
       required this.loading,
-      required this.contacts});
+      required this.contacts,
+      required this.activeContact});
 
   final List<ContactModel> contacts;
   final String errorMessage;
   final bool loading;
+  final ContactModel? activeContact;
 
   ContactsState copyWith(
-      {List<ContactModel>? contacts, String? error, bool? loading}) {
+      {List<ContactModel>? contacts,
+      String? error,
+      bool? loading,
+      ContactModel? activeContact,
+      bool clearActiveContact = false}) {
     return ContactsState(
       contacts: contacts ?? this.contacts,
       errorMessage: error ?? errorMessage,
       loading: loading ?? this.loading,
+      activeContact: clearActiveContact == true
+          ? null
+          : activeContact ?? this.activeContact,
     );
   }
 }
@@ -29,7 +38,10 @@ class ContactsState {
 class ContactsNotifier extends StateNotifier<ContactsState> {
   ContactsNotifier()
       : super(const ContactsState(
-            errorMessage: '', loading: false, contacts: []));
+            errorMessage: '',
+            loading: false,
+            contacts: [],
+            activeContact: null));
 
   void getContacts() async {
     state = state.copyWith(loading: true);
@@ -40,8 +52,9 @@ class ContactsNotifier extends StateNotifier<ContactsState> {
       final List<ContactModel> contactsModel =
           contacts.map((contact) => ContactModel.fromMap(contact)).toList();
 
-      state =
-          state.copyWith(contacts: contactsModel, loading: false, error: '');
+      state = state
+          .copyWith(contacts: [...contactsModel], loading: false, error: '');
+      getAvatars();
     } catch (e) {
       inspect(e);
       state = state.copyWith(
@@ -51,18 +64,80 @@ class ContactsNotifier extends StateNotifier<ContactsState> {
     }
   }
 
-  updateContact(ContactModel contact) {
-    List<ContactModel> contacts = state.contacts;
-    List<ContactModel> restContacts =
-        contacts.where((c) => c.identifier != contact.identifier).toList();
-    state = state.copyWith(contacts: [...restContacts, contact]);
+  void getAvatars() async {
+    List<ContactModel> contacts = [...state.contacts];
+    for (var contact in contacts) {
+      Uint8List? avatar =
+          await ContactsService.getAvatar(contact, photoHighRes: false);
+      if (avatar != null && avatar.isNotEmpty) {
+        ContactModel updatedContact = contact.copyWith(newAvatar: avatar);
+        updateContact(updatedContact);
+      }
+    }
   }
 
-  deleteContact(ContactModel contact) {
-    List<ContactModel> contacts = state.contacts;
+  void addContact(ContactModel contact) {
+    state = state.copyWith(contacts: [...state.contacts, contact.copyWith()]);
+  }
+
+  void setActiveContact(ContactModel? contact) {
+    if (contact != null) {
+      state = state.copyWith(activeContact: contact.copyWith());
+    } else {
+      state = state.copyWith(clearActiveContact: true);
+    }
+  }
+
+  void toggleActiveContact() {
+    if (state.activeContact != null) {
+      ContactModel activeContact = state.activeContact!.copyWith()
+        ..toggleFavorite();
+      List<ContactModel> contacts = [...state.contacts];
+      List<ContactModel> restContacts = contacts
+          .where((c) => c.identifier != state.activeContact!.identifier)
+          .toList();
+      state = state.copyWith(contacts: [...restContacts, activeContact]);
+    }
+  }
+
+  void setActiveAvatar() async {
+    if (state.activeContact != null) {
+      try {
+        Uint8List? avatar =
+            await ContactsService.getAvatar(state.activeContact!);
+        if (avatar != null && avatar.isNotEmpty) {
+          ContactModel activeContactUpdated =
+              state.activeContact!.copyWith(newAvatar: avatar);
+          updateActiveContact(activeContactUpdated);
+        }
+      } catch (e) {
+        inspect(e);
+      }
+    }
+  }
+
+  void updateActiveContact(ContactModel contact) {
+    List<ContactModel> contacts = [...state.contacts];
     List<ContactModel> restContacts =
         contacts.where((c) => c.identifier != contact.identifier).toList();
-    state = state.copyWith(contacts: [...restContacts]);
+    state = state.copyWith(
+        contacts: [...restContacts, contact.copyWith()],
+        activeContact: contact.copyWith());
+  }
+
+  void updateContact(ContactModel contact) {
+    List<ContactModel> contacts = [...state.contacts];
+    List<ContactModel> restContacts =
+        contacts.where((c) => c.identifier != contact.identifier).toList();
+    state = state.copyWith(contacts: [...restContacts, contact.copyWith()]);
+  }
+
+  void deleteActiveContact(ContactModel contact) {
+    List<ContactModel> contacts = [...state.contacts];
+    List<ContactModel> restContacts =
+        contacts.where((c) => c.identifier != contact.identifier).toList();
+    state =
+        state.copyWith(contacts: [...restContacts], clearActiveContact: true);
   }
 }
 
