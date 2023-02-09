@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/animation.dart';
 import 'package:diacritic/diacritic.dart';
@@ -125,7 +127,8 @@ class ContactsUtils {
     if (await canLaunchUrl(url)) {
       await launchUrl(url);
     } else {
-      throw 'Could not launch $url';
+      // throw 'Could not launch $url';
+      inspect('Could not launch $url');
     }
   }
 }

@@ -1,13 +1,40 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:contacts_service/contacts_service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:contactos_app/features/contact/models/contact_model.dart';
+import 'package:contactos_app/features/contacts/provider/contacts_provider.dart';
 import 'package:contactos_app/features/contacts/widgets/contacts_widgets.dart';
 
-class ContactsScreen extends StatelessWidget {
+class ContactsScreen extends ConsumerWidget {
   const ContactsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    void onAddContact() {
+      Navigator.pushNamed(context, 'contact');
+    }
+
     return SafeArea(
       child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: const Color(0xffD3E3FD),
+          child: const Icon(
+            Icons.add,
+            color: Color(0xff041E49),
+          ),
+          onPressed: () async {
+            try {
+              Contact newContact = await ContactsService.openContactForm();
+              ContactModel newContactModel = ContactModel.fromMap(newContact);
+              ref.read(contactsProvider.notifier).addContact(newContactModel);
+              onAddContact();
+            } catch (e) {
+              inspect(e);
+            }
+          },
+        ),
         appBar: AppBar(
           surfaceTintColor: Colors.white,
           backgroundColor: Colors.white,

@@ -77,7 +77,9 @@ class ContactsNotifier extends StateNotifier<ContactsState> {
   }
 
   void addContact(ContactModel contact) {
-    state = state.copyWith(contacts: [...state.contacts, contact.copyWith()]);
+    ContactModel newContact = contact.copyWith();
+    state = state.copyWith(
+        contacts: [...state.contacts, newContact], activeContact: newContact);
   }
 
   void setActiveContact(ContactModel? contact) {
