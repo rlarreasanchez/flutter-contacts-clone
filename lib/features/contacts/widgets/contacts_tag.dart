@@ -19,7 +19,7 @@ class ContactsTag extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5.0),
-      child: TextButton.icon(
+      child: TextButton(
         onPressed: onTap,
         style: ButtonStyle(
           backgroundColor: MaterialStatePropertyAll(
@@ -31,15 +31,23 @@ class ContactsTag extends StatelessWidget {
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),
               side: const BorderSide(
-                color: Colors.black26,
-                width: 2,
+                color: Colors.black45,
+                width: 1,
                 style: BorderStyle.solid,
               ),
             ),
           ),
         ),
-        label: Row(
+        child: Row(
           children: [
+            Icon(
+              icon,
+              size: 18,
+              color: Theme.of(context).primaryColor,
+            ),
+            const SizedBox(
+              width: 8,
+            ),
             Text(
               title,
               style: const TextStyle(
@@ -48,28 +56,22 @@ class ContactsTag extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
-            if (active || isSelectable)
-              const SizedBox(
-                width: 5,
-              ),
+            const SizedBox(
+              width: 5,
+            ),
             if (active)
               const Icon(
                 Icons.close,
                 color: Colors.black87,
-                size: 20,
+                size: 18,
               ),
             if (isSelectable)
               const Icon(
                 Icons.arrow_drop_down,
                 color: Colors.black87,
-                size: 20,
+                size: 18,
               )
           ],
-        ),
-        icon: Icon(
-          icon,
-          size: 20,
-          color: Theme.of(context).primaryColor,
         ),
       ),
     );

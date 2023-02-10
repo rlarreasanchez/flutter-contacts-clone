@@ -30,7 +30,7 @@ class ContactsScreen extends ConsumerWidget {
             height: 5,
           ),
           const SizedBox(
-            height: 38,
+            height: 32,
             child: ContactsTagsList(),
           ),
           const SizedBox(
