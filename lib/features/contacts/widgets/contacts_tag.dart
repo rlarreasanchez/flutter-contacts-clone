@@ -5,12 +5,15 @@ class ContactsTag extends StatelessWidget {
   final String title;
   final bool active;
   final void Function() onTap;
+  final bool isSelectable;
+
   const ContactsTag(
       {super.key,
       required this.icon,
       required this.title,
       required this.active,
-      required this.onTap});
+      required this.onTap,
+      this.isSelectable = false});
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +48,19 @@ class ContactsTag extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
-            if (active)
+            if (active || isSelectable)
               const SizedBox(
                 width: 5,
               ),
             if (active)
               const Icon(
                 Icons.close,
+                color: Colors.black87,
+                size: 20,
+              ),
+            if (isSelectable)
+              const Icon(
+                Icons.arrow_drop_down,
                 color: Colors.black87,
                 size: 20,
               )

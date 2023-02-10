@@ -42,6 +42,11 @@ class ContactsStickyList extends ConsumerWidget {
           .where((contact) => contact.emailsSanitized.isNotEmpty)
           .toList();
     }
+    if (filter.company.isNotEmpty) {
+      contactsFiltered = contactsFiltered
+          .where((contact) => contact.company == filter.company)
+          .toList();
+    }
 
     return contactsFiltered;
   }

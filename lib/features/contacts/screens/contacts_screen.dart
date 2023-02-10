@@ -12,29 +12,9 @@ class ContactsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    void onAddContact() {
-      Navigator.pushNamed(context, 'contact');
-    }
-
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: const Color(0xffD3E3FD),
-          child: const Icon(
-            Icons.add,
-            color: Color(0xff041E49),
-          ),
-          onPressed: () async {
-            try {
-              Contact newContact = await ContactsService.openContactForm();
-              ContactModel newContactModel = ContactModel.fromMap(newContact);
-              ref.read(contactsProvider.notifier).addContact(newContactModel);
-              onAddContact();
-            } catch (e) {
-              inspect(e);
-            }
-          },
-        ),
+        floatingActionButton: const _FloatingAddContactButton(),
         appBar: AppBar(
           surfaceTintColor: Colors.white,
           backgroundColor: Colors.white,
@@ -59,6 +39,37 @@ class ContactsScreen extends ConsumerWidget {
           Expanded(child: ContactsStickyList()),
         ]),
       ),
+    );
+  }
+}
+
+class _FloatingAddContactButton extends ConsumerWidget {
+  const _FloatingAddContactButton({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    void onAddContact() {
+      Navigator.pushNamed(context, 'contact');
+    }
+
+    return FloatingActionButton(
+      backgroundColor: const Color(0xffD3E3FD),
+      child: const Icon(
+        Icons.add,
+        color: Color(0xff041E49),
+      ),
+      onPressed: () async {
+        try {
+          Contact newContact = await ContactsService.openContactForm();
+          ContactModel newContactModel = ContactModel.fromMap(newContact);
+          ref.read(contactsProvider.notifier).addContact(newContactModel);
+          onAddContact();
+        } catch (e) {
+          inspect(e);
+        }
+      },
     );
   }
 }
