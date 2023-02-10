@@ -104,14 +104,17 @@ class ContactsNotifier extends StateNotifier<ContactsState> {
     }
   }
 
-  void setActiveAvatar() async {
+  void setActiveAvatar([bool refresh = false]) async {
     if (state.activeContact != null) {
+      if (!refresh && state.activeContact!.highImageLoaded) {
+        return;
+      }
       try {
         Uint8List? avatar =
             await ContactsService.getAvatar(state.activeContact!);
         if (avatar != null && avatar.isNotEmpty) {
-          ContactModel activeContactUpdated =
-              state.activeContact!.copyWith(newAvatar: avatar);
+          ContactModel activeContactUpdated = state.activeContact!
+              .copyWith(newAvatar: avatar, highImageLoaded: true);
           updateActiveContact(activeContactUpdated);
         }
       } catch (e) {

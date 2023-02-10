@@ -155,7 +155,7 @@ class _EditButton extends ConsumerWidget {
             ref
                 .read(contactsProvider.notifier)
                 .updateActiveContact(updatedModel);
-            ref.read(contactsProvider.notifier).setActiveAvatar();
+            ref.read(contactsProvider.notifier).setActiveAvatar(true);
           } catch (e) {
             inspect(e);
           }

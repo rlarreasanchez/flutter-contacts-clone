@@ -8,8 +8,11 @@ import 'package:contactos_app/shared/utils/utils.dart';
 
 class ContactModel extends Contact {
   String? id;
+  bool highImageLoaded = false;
+
   ContactModel({
     id,
+    this.highImageLoaded = false,
     super.displayName,
     super.givenName,
     super.middleName,
@@ -114,6 +117,7 @@ class ContactModel extends Contact {
   ContactModel copyWith({
     String? id,
     Uint8List? newAvatar,
+    bool? highImageLoaded,
   }) {
     return ContactModel(
       id: id ?? identifier,
@@ -129,6 +133,7 @@ class ContactModel extends Contact {
       phones: phones,
       postalAddresses: postalAddresses,
       avatar: newAvatar ?? avatar,
+      highImageLoaded: highImageLoaded ?? this.highImageLoaded,
       birthday: birthday,
       androidAccountType: androidAccountType,
       androidAccountTypeRaw: androidAccountTypeRaw,
