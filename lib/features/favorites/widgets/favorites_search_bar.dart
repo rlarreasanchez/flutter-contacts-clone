@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:contactos_app/features/contacts/screens/search_screen.dart';
-import 'package:contactos_app/shared/widgets/search_bar.dart';
+import 'package:contactos_app/shared/widgets/search_bar.dart' as searchbar;
 
 class FavoritesSearchBar extends StatelessWidget {
   const FavoritesSearchBar({super.key});
@@ -9,7 +9,7 @@ class FavoritesSearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
-      child: SearchBar(
+      child: searchbar.SearchBar(
         hintText: 'Buscar contactos',
         onTap: () {
           Navigator.of(context).push(

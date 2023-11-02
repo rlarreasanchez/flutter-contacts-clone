@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:contactos_app/features/contacts/provider/filter_contacts_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

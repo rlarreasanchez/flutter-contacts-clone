@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:contactos_app/features/contact/models/contact_model.dart';
 import 'package:contactos_app/features/contacts/provider/contacts_provider.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-import 'package:contactos_app/shared/widgets/search_bar.dart';
+import 'package:contactos_app/shared/widgets/search_bar.dart' as searchbar;
 import 'package:flutter/material.dart';
 import 'package:contactos_app/features/contacts/screens/search_screen.dart';
 
@@ -9,7 +9,7 @@ class ContactsSearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SearchBar(
+    return searchbar.SearchBar(
         onTap: () {
           Navigator.of(context).push(
             PageRouteBuilder(

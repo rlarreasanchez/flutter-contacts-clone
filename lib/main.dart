@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         routes: {
           'home': (context) => const HomeScreen(),
           'search': (context) => const SearchScreen(),
-          'contact': (context) => ContactScreen(),
+          'contact': (context) => const ContactScreen(),
         });
   }
 }

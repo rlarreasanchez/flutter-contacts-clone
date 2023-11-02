@@ -93,27 +93,3 @@ class _FavoritesTitleAction extends StatelessWidget {
     );
   }
 }
-
-class _RecientesTitleAction extends StatelessWidget {
-  const _RecientesTitleAction({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: const [
-        Text(
-          'Recientes',
-          style: TextStyle(
-              fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black87),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8.0),
-          child: Icon(Icons.more_vert),
-        )
-      ],
-    );
-  }
-}

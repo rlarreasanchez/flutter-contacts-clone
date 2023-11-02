@@ -12,21 +12,21 @@ class FavoritesEmptyContainer extends StatelessWidget {
     return CardContainer(
         child: Column(
       children: [
-        Row(
+        const Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const CircleAvatar(
+            CircleAvatar(
               backgroundColor: Color(0xffD3E3FD),
               maxRadius: 30,
               child: Icon(Icons.star, color: Colors.orange, size: 40),
             ),
-            const SizedBox(
+            SizedBox(
               width: 10,
             ),
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
+                children: [
                   Text(
                     'Accede rápidamente a tus personas favoritas',
                     style: TextStyle(
@@ -67,9 +67,9 @@ class FavoritesEmptyContainer extends StatelessWidget {
               overlayColor: MaterialStatePropertyAll(Colors.grey[400]),
               backgroundColor:
                   const MaterialStatePropertyAll(Color(0xffC2E7FF))),
-          child: Row(
+          child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Icon(
                 Icons.add,
                 color: Colors.black87,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:contactos_app/extensions/string_extension.dart';
 import 'package:contactos_app/features/contacts/provider/contacts_provider.dart';
 import 'package:contactos_app/features/contacts/utils/contacts_utils.dart';
@@ -68,7 +70,7 @@ class ContactInfo extends ConsumerWidget {
                 ),
               if (contactsRef.activeContact!.whatsAppPhone != null)
                 ContactInfoRow(
-                  headerIcon: Icons.whatsapp_rounded,
+                  headerIcon: FontAwesomeIcons.whatsapp,
                   headerIconColor: Colors.green,
                   title:
                       'Mandar Whatsapp a ${contactsRef.activeContact!.whatsAppPhone}',
